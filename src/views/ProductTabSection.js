@@ -1,0 +1,77 @@
+import React, { useState } from 'react';
+import ProductModel from '../models/ProductModel';
+import ProductItem from './ProductItem';
+
+const ProductTabSection = ({ title, addToCart }) => {
+  const tabSets = {
+    'Chăm sóc gia đình': [
+      { label: 'Nước giặt quần áo', value: 'nuoc-giat' },
+      { label: 'Nước lau nhà', value: 'nuoc-lau-nha' },
+      { label: 'Xịt phòng, sáp thơm', value: 'sap-thom' }
+    ],
+    'Sản phẩm được quan tâm': [
+      { label: 'Hot nhất hè này', value: 'hot' },
+      { label: 'Săn deal sốc', value: 'san-deal' },
+      { label: 'Đồng giá 9k', value: 'dong-gia-9k' }
+    ],
+    'Thực phẩm tươi sống': [
+      { label: 'Rau củ', value: 'rau-cu' },
+      { label: 'Hoa quả', value: 'hoa-quả' }
+    ]
+  };
+
+  const tabs = tabSets[title] || [];
+
+  const [activeTab, setActiveTab] = useState(tabs[0]?.value || null);
+
+  const filteredProducts = activeTab === 'sap-thom'
+    ? ProductModel.getAllProducts().filter(product => 
+        product.types.includes('sap-thom') || product.types.includes('xit-phong')
+      ).slice(0, 5)
+    : ProductModel.getProductsByType(activeTab).slice(0, 5);
+
+  return (
+    <div className="section-product-tabs mt-5">
+      <div className="container">
+        <div className="heading-bar position-relative d-flex">
+          <h2 className="w-auto mx-auto text-center position-relative z-2 bg-success-subtle d-inline px-3">
+            <a href="" className="text-decoration-none fs-1 fw-semibold text-success">
+              {title}
+            </a>
+          </h2>
+        </div>
+        <div className="heading-tabs mx-5 mt-4 row justify-content-center">
+          {tabs.map((tab) => (
+            <button
+              key={tab.value}
+              className={`btn product-tab col-2 mx-3 ${activeTab === tab.value ? 'active' : 'bg-white border'} hover`}
+              onClick={() => setActiveTab(tab.value)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+        <div className="tab-content mt-4">
+          <div className="product-list row bg-white py-3 justify-content-center m-0">
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product) => (
+                <ProductItem key={product.id} product={product} addToCart={addToCart} />
+              ))
+            ) : (
+              <p className="text-center">Không có sản phẩm nào trong danh mục này.</p>
+            )}
+          </div>
+          <a
+            href=""
+            alt="Xem thêm"
+            className="bg-white w-100 d-flex mt-4 p-2 justify-content-center text-decoration-none text-success hover rounded-2"
+          >
+            Xem tất cả <i className="ms-1 bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProductTabSection;
