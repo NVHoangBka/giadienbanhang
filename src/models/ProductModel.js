@@ -84,7 +84,140 @@ const products = [
     types: [ 'nuoc-lau-nha','xit-phong','san-deal'],
     titles: ['cham-soc-gia-dinh'],
     falseSale: false
+  },
+  {
+    id: 9,
+    name: "Rau muống hữu cơ 300g",
+    price: 35000,
+    discountPrice: 20000,
+    image: "https://bizweb.dktcdn.net/thumb/grande/100/518/448/products/upload-e9fa2f43255248b6a348296051b1f4d3.jpg?v=1717407836197",
+    description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
+    types: [ 'rau-cu'],
+    titles: ['thuc-pham-tuoi-song'],
+    falseSale: false
+  },
+  {
+    id: 10,
+    name: "VINAMIT-RAU LANG HỮU CƠ 300g",
+    price: 35000,
+    discountPrice: 20000,
+    image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/upload-ac8b79ef7a3c4a08aa419a4bf072daa1.jpg?v=1717407834123",
+    description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
+    types: [ 'rau-cu'],
+    titles: ['thuc-pham-tuoi-song'],
+    falseSale: false
+  },
+  {
+    id: 11,
+    name: "VINAMIT-RAU DỀN HỮU CƠ 300G",
+    price: 35000,
+    discountPrice: 20000,
+    image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/upload-46c2e35320494016b667d5d67c80f7fd.jpg?v=1717407832690",
+    description: "VINAMIT-RAU DỀN HỮU CƠ 300G",
+    types: [ 'rau-cu'],
+    titles: ['thuc-pham-tuoi-song'],
+    falseSale: false
+  },
+  {
+    id: 12,
+    name: "VINAMIT-CẢI BẸ XANH HỮU CƠ 300g",
+    price: 35000,
+    discountPrice: 20000,
+    image: "https://bizweb.dktcdn.net/thumb/grande/100/518/448/products/upload-30312511bb204a3d9aa344e21a70a52b.jpg?v=1717407831063",
+    description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
+    types: [ 'rau-cu'],
+    titles: ['thuc-pham-tuoi-song'],
+    falseSale: false
+  },
+  {
+    id: 13,
+    name: "Tôm lột 200G",
+    price: 35000,
+    discountPrice: 20000,
+    image: "https://bizweb.dktcdn.net/thumb/grande/100/518/448/products/upload-8922cfd99be640d89ba6ceaf0006180c.jpg?v=1717407827807",
+    description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
+    types: [ 'rau-cu'],
+    titles: ['thuc-pham-tuoi-song'],
+    falseSale: false
+  },
+  {
+    id: 14,
+    name: "TH - XƯƠNG BÒ TƠ",
+    price: 35000,
+    discountPrice: 20000,
+    image: "https://bizweb.dktcdn.net/thumb/grande/100/518/448/products/upload-92ddc58356804b73b775fa81fee2fe40.jpg?v=1717407825213",
+    description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
+    types: [ 'rau-cu'],
+    titles: ['thuc-pham-tuoi-song'],
+    falseSale: false
+  },
+  {
+    id: 15,
+    name: "Sổ Planner Lên Kế Hoạch Hằng Ngày",
+    price: 35000, 
+    discountPrice: 20000,
+    image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/frame-92.jpg?v=1717474945973",
+    description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
+    types: [ 'but-viet'],
+    titles: ['van-phong-pham'],
+    falseSale: false
+  },
+  {
+    id: 16,
+    name: "Giấy ghi chú màu trong suốt dùng đánh dấu trang sách tiện lợi",
+    price: 35000,
+    discountPrice: 20000,
+    image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/frame-88.jpg?v=1717474686750",
+    description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
+    types: [ 'but-viet'],
+    titles: ['van-phong-pham'],
+    falseSale: false
+  },
+  {
+    id: 17,
+    name: "Túi đựng bút chất liệu trong suốt phong cách cá tính",
+    price: 35000,
+    discountPrice: 20000,
+    image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/frame-84.jpg?v=1717474250750",
+    description: "VINAMIT-RAU DỀN HỮU CƠ 300G",
+    types: [ 'but-viet'],
+    titles: ['van-phong-pham'],
+    falseSale: false
+  },
+  {
+    id: 18,
+    name: "Hộp bút đánh dấu highlight dạ quang 18 màu lựa chọn",
+    price: 35000,
+    discountPrice: 20000,
+    image: "https://bizweb.dktcdn.net/thumb/grande/100/518/448/products/frame-79.jpg?v=1717473953247",
+    description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
+    types: [ 'but-viet'],
+    titles: ['van-phong-pham'],
+    falseSale: false
+  },
+  {
+    id: 19,
+    name: "Bút Bi Gel Ngòi 0,5mm Viết Trơn - Mực Đều",
+    price: 35000,
+    discountPrice: 20000,
+    image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/frame-76.jpg?v=1717473523093",
+    description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
+    types: ['but-viet'],
+    titles: ['van-phong-pham'],
+    falseSale: false
+  },
+  {
+    id: 20,
+    name: "Cuộn Băng Keo Hai Mặt Dài 6m Tiện Dụng Cho Học Sinh / Văn Phòng",
+    price: 35000,
+    discountPrice: 20000,
+    image: "https://bizweb.dktcdn.net/thumb/grande/100/518/448/products/image-70.jpg?v=1717473122453",
+    description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
+    types: ['but-viet'],
+    titles: ['van-phong-pham'],
+    falseSale: false
   }
+
 ];
 
 class ProductModel {

@@ -1,32 +1,38 @@
 // views/Navbar.jsx
-import React from "react";
+import React, { useState } from 'react';
 
 import { Link, useNavigate } from "react-router-dom";
 import AuthController from '../../controllers/AuthController';
+import Menu from './Menu';
 
 const Header = () => {
   const navigate = useNavigate();
   const authController = new AuthController();
   const user = authController.getCurrentUser();
-
   const handleClickHome = () => {
     navigate("/");
   };
   const handleClickLogin = () => {
-    navigate("/login");
+    navigate("/account/login");
+  };
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
   return (
     <header class="header">
       <div class="header-top">
         <div className="container d-flex justify-content-between align-items-center">
-          <div class="header-top-left d-flex align-items-center">
+          <div class="header-top-left d-flex align-items-center" onClick={toggleMenu}>
             <button className="btn btn-outline-secondary border rounded-circle">
               <i class="bi bi-list fs-5 "></i>
             </button>
             <span class="header-top-left-text ms-1">Danh mục sản phẩm</span>
           </div>
-          <div class="header-top-center text-center" onClick={handleClickHome}>
-            <img src="logo.png" alt="logo" class="header-logo h-75 w-50" />
+          <Menu isOpen={isMenuOpen}/>
+          <div class="header-top-center text-center" onClick={handleClickHome} style={{ background: 'transparent' }}>
+            <img src="https://www.canva.com/design/DAGwwkhPGJ4/TrjwaRAGmJSgLHZRKbYLGg/view" alt="logo" class="header-logo h-75 w-50" />
           </div>
           <div class="header-top-right">
             <button className="btn btn-outline-secondary border rounded-circle m-3">

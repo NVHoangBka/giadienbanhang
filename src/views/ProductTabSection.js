@@ -17,6 +17,11 @@ const ProductTabSection = ({ title, addToCart }) => {
     'Thực phẩm tươi sống': [
       { label: 'Rau củ', value: 'rau-cu' },
       { label: 'Hoa quả', value: 'hoa-quả' }
+    ],
+    'Văn phòng phẩm': [
+      { label: 'Bút viết', value: 'but-viet' },
+      { label: 'Giấy và sổ tay', value: 'giay-so-tay' },
+      { label: 'Dụng cụ vẽ', value: 'dung-cu-ve' }
     ]
   };
 

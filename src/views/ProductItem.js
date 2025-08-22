@@ -30,7 +30,7 @@ const ProductItem = ({ product, addToCart }) => {
         className="img-fluid rounded-start w-100"
         alt={product.name}
       />
-      <p className="mt-3 line-clamp-2 fs-body fw-semibold hover">{product.name}</p>
+      <p className="mt-3 line-clamp-2 fs-body fw-semibold hover fixed-two-lines">{product.name}</p>
       <div className="more d-flex justify-content-between mx-1">
         <div className="price">
           <p className="price-current m-0 text-warning fw-bold">
