@@ -13,30 +13,36 @@ const titles = [
   },
   {
     id: 3,
-    name: "Đồ dùng cho me & bé",
+    name: "Thực phẩm tươi sống",
     image: "https://bizweb.dktcdn.net/thumb/small/100/518/448/themes/953339/assets/coll_3.png?1733201190476",   
     type: 'h1'
   }
   ,
   {
     id: 4,
-    name: "Đồ dùng cho me & bé",
+    name: "Thực phẩm khô",
     image: "https://bizweb.dktcdn.net/thumb/small/100/518/448/themes/953339/assets/coll_4.png?1733201190476",   
     type: 'h1'
   }
   ,
   {
     id: 5,
-    name: "Đồ dùng cho me & bé",
+    name: "Đồ dùng nhà bếp",
     image: "https://bizweb.dktcdn.net/thumb/small/100/518/448/themes/953339/assets/coll_5.png?1733201190476",   
     type: 'h1'
   }
   ,
   {
     id: 6,
-    name: "Đồ dùng cho me & bé",
+    name: "Sữa các loại",
     image: "https://bizweb.dktcdn.net/thumb/small/100/518/448/themes/953339/assets/coll_6.png?1733201190476",   
-    type: 'h1'
+    type: 'h2'
+  },
+  {
+    id: 7,
+    name: "Văn phòng phẩm",
+    image: "https://bizweb.dktcdn.net/thumb/small/100/518/448/themes/953339/assets/coll_6.png?1733201190476",   
+    type: 'h2'
   }
 ];
 

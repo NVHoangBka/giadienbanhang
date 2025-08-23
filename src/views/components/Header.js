@@ -1,5 +1,5 @@
 // views/Navbar.jsx
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { Link, useNavigate } from "react-router-dom";
 import AuthController from '../../controllers/AuthController';
@@ -20,6 +20,9 @@ const Header = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  const menuRef = useRef(null);
+
+
   return (
     <header class="header">
       <div class="header-top">
@@ -30,7 +33,17 @@ const Header = () => {
             </button>
             <span class="header-top-left-text ms-1">Danh mục sản phẩm</span>
           </div>
-          <Menu isOpen={isMenuOpen}/>
+          <Menu
+            isOpen={isMenuOpen}
+            menuRef={menuRef}
+            setIsMenuOpen={setIsMenuOpen}
+          />
+          {isMenuOpen && (
+            <div
+              className="modal-backdrop fade show"
+              onClick={() => setIsMenuOpen(false)}
+            ></div>
+          )}
           <div class="header-top-center text-center" onClick={handleClickHome} style={{ background: 'transparent' }}>
             <img src="https://www.canva.com/design/DAGwwkhPGJ4/TrjwaRAGmJSgLHZRKbYLGg/view" alt="logo" class="header-logo h-75 w-50" />
           </div>

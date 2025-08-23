@@ -6,8 +6,8 @@ import Register from '../views/layout/Auth/Register';
 const AuthRouter = ({ isAuthenticated, onLogin }) => {
   return (
     <Routes>
-      <Route path="login" element={<Login onLogin={onLogin} />} />
-      <Route path="register" element={<Register />} />
+      <Route path="/login" element={<Login onLogin={onLogin} />} />
+      <Route path="/register" element={<Register />} />
       {/* fallback */}
       <Route path="*" element={<Navigate to="login" replace />} />
     </Routes>

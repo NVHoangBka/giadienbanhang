@@ -57,7 +57,7 @@
   height: 100%;
   background-color: #f8f9fa !important;
   transition: left 0.3s ease-in-out; 
-  z-index: 1040;
+  z-index: 1060;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
 }
 
@@ -99,6 +99,18 @@
   min-width: 200px;
 }
 
+.dropdown-submenu .dropdown-menu li {
+  
+}
+
 .dropdown-submenu:hover > .dropdown-menu {
   display: block;
+}
+
+.menu-hover:hover {
+  background-color: #EBEBEB;
+}
+
+.btn:hover {
+  background-color: #EBEBEB !important;
 }
