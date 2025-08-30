@@ -4,15 +4,33 @@ class CartController {
   }
 
   addToCart(product) {
-    this.cartItems = [...this.cartItems, product];
+    const existing = this.cartItems.find(item => item.id === product.id);
+    if (existing) {
+      existing.quantity = (existing.quantity || 1) + 1;
+    } else {
+      this.cartItems.push({ ...product, quantity: 1 });
+    }
     this.saveCart();
     return this.cartItems;
   }
 
-  removeFromCart(index) {
-    this.cartItems = this.cartItems.filter((_, i) => i !== index);
+  removeFromCart(productId) {
+     this.cartItems = this.cartItems.filter(item => item.id !== productId);
+      this.saveCart();
+      return this.cartItems;
+  }
+
+  updateQuantity(productId, quantity) {
+    this.cartItems = this.cartItems.map(item => 
+      item.id === productId ? { ...item, quantity } : item
+    );
     this.saveCart();
     return this.cartItems;
+  } 
+
+  clearCart() {
+    this.cartItems = [];
+    this.saveCart();
   }
 
   getCartItems() {
@@ -22,6 +40,15 @@ class CartController {
   saveCart() {
     localStorage.setItem('cart', JSON.stringify(this.cartItems));
   }
+
+  getTotalQuantity() {
+    return this.cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  }
+
+  getTotalPrice() {
+    return this.cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  }
+
 }
 
 export default CartController;

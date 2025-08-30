@@ -17,8 +17,8 @@ const Home = ({ addToCart }) => {
       <div className="home bg-success-subtle py-4">
         <div className="container">
           <div className="section-banner-group row">
-            {bannerHome.map((banner) => (
-              <div className="banner-item col-4">
+            {bannerHome.map((banner, index) => (
+              <div key={index} className="banner-item col-4">
                 <img
                   src={banner.image}
                   alt="Banner 1"

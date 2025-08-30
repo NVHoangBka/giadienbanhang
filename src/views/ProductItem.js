@@ -23,6 +23,9 @@ const ProductItem = ({ product, addToCart }) => {
     return stars;
   };
 
+
+
+
   return (
     <div className="product-item col-2 p-3 border mx-2 bg-white h-100 rounded-4">
       <img

@@ -4,8 +4,13 @@ import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import AuthController from '../../controllers/AuthController';
 import Menu from './Menu';
+import Search from './Search';
+import Cart from '../Cart';
+import CartController from '../../controllers/CartController';
 
-const Header = () => {
+const cartController = new CartController();  
+
+const Header = ({ cartItems }) => {
   const navigate = useNavigate();
   const authController = new AuthController();
   const user = authController.getCurrentUser();
@@ -21,6 +26,19 @@ const Header = () => {
     setIsMenuOpen(!isMenuOpen);
   };
   const menuRef = useRef(null);
+
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const toggleSearch = () => {
+    setIsSearchOpen(!isSearchOpen);
+  };
+
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
+
+   const totalQuantity = cartItems.reduce((sum, item) => sum + (item.quantity || 0), 0);
+  
 
 
   return (
@@ -48,25 +66,47 @@ const Header = () => {
             <img src="https://www.canva.com/design/DAGwwkhPGJ4/TrjwaRAGmJSgLHZRKbYLGg/view" alt="logo" class="header-logo h-75 w-50" />
           </div>
           <div class="header-top-right">
-            <button className="btn btn-outline-secondary border rounded-circle m-3">
+            <button className="btn btn-outline-secondary border rounded-circle m-3" onClick={toggleSearch}>
               <i class="bi bi-search fs-5"></i>
             </button>
+            <Search
+              isOpen={isSearchOpen}
+              // SearchRef={SearchRef}
+              setIsSearchOpen={setIsSearchOpen}
+            />
+            {isSearchOpen && (
+              <div
+                className="modal-backdrop fade show"
+                onClick={() => setIsSearchOpen(false)}
+              ></div>
+            )}
             <button
               className="btn btn-outline-secondary border rounded-circle m-3"
               onClick={handleClickLogin}
             >
               <i className="bi bi-person fs-5"></i>
             </button>
-            <button className="btn btn-outline-secondary border m-3 position-relative">
+            <button className="btn btn-outline-secondary border m-3 position-relative" onClick={toggleCart}>
               <i className="bi bi-cart4 fs-5 "></i>
               <span className="ms-1">Giỏ hàng</span>
               <span
                 className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                 style={{ fontSize: "0.6rem" }}
-              >
-                3<span className="visually-hidden">số lượng sản phẩm</span>
+              >{totalQuantity}
               </span>
             </button>
+            <Cart
+              isOpen={isCartOpen}
+              setIsCartOpen={setIsCartOpen}
+              cartController={cartController}
+            />
+            {isCartOpen && (
+              <div
+                className="modal-backdrop fade show"
+                onClick={() => setIsCartOpen(false)}
+              ></div>
+            )}
+          
           </div>
         </div>
       </div>

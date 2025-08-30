@@ -1,3 +1,14 @@
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinner {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+
 .hover:hover {
   color: orange !important;
   opacity: 0.8;
@@ -56,7 +67,7 @@
   width: 400px;
   height: 100%;
   background-color: #f8f9fa !important;
-  transition: left 0.3s ease-in-out; 
+  transition: left 0.4s ease-in-out; 
   z-index: 1060;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
 }
@@ -65,30 +76,38 @@
   left: 0; 
 }
 
+.menu-container {
+      display: grid;
+    height: 100%;
+    grid-template-rows: auto 1fr auto;
+    align-items: start;
+}
+
 .menu-header {
   color: var(--bs-body-color);
 }
 
-.dropdown-menu {
+.menu-list {
   list-style: none;
   padding: 0;
   margin: 0;
   width: 100%;
   height: 100%;
-}
-
-.dropdown-menu li {
-  position: relative;
-}
-
-.dropdown-menu a {
   display: block;
-  padding: 10px 15px;
+  border-top: 1px solid #EBEBEB;
+  padding: 12px 0;
+}
+
+
+.menu-list a {
+  display: block;
+  padding: 12px 24px;
   text-decoration: none;
   color: #333;
 }
 
-.dropdown-submenu .dropdown-menu {
+
+.dropdown-submenu .menu-list {
   top: 0;
   left: 100%;
   margin-left: .1rem;
@@ -99,11 +118,11 @@
   min-width: 200px;
 }
 
-.dropdown-submenu .dropdown-menu li {
-  
-}
+/* .dropdown-submenu .dropdown-menu li {
+  position: absolute;
+} */
 
-.dropdown-submenu:hover > .dropdown-menu {
+.dropdown-submenu:hover > .menu-list {
   display: block;
 }
 
@@ -113,4 +132,66 @@
 
 .btn:hover {
   background-color: #EBEBEB !important;
+  color: black !important;
+}
+
+.menu-footer {
+  color: black;
+}
+
+
+.search {
+  position: fixed;
+  top: 0;
+  right: -500px;
+  width: 500px;
+  height: 100%;
+  background-color: #f8f9fa !important;
+  transition: right 0.4s ease-in-out; 
+  z-index: 1060;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.search.active {
+  right: 0; 
+}
+
+
+.search-keyword {
+  color: var(--color-coupon-primary);
+ text-decoration: none;
+  padding:6px 12px;
+  margin: 8px;
+  position: relative;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.search-keyword::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-coupon-primary);
+    opacity: .2;
+    border-radius: 16px;
+}
+
+
+.cart {
+  position: fixed;
+  top: 0;
+  right: -500px;
+  width: 500px;
+  height: 100%;
+  background-color: #FFFFFF !important;
+  transition: right 0.4s ease-in-out; 
+  z-index: 1060;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.cart.active {
+  right: 0; 
 }
