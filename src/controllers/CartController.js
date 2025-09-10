@@ -11,6 +11,7 @@ class CartController {
       this.cartItems.push({ ...product, quantity: 1 });
     }
     this.saveCart();
+    
     return this.cartItems;
   }
 

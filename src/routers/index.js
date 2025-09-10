@@ -8,7 +8,7 @@ import Home from '../views/Home';
 const AppRouter = ({ isAuthenticated, cartItems, addToCart, removeFromCart, onLogin }) => {
   return (
     <Routes>
-      <Route path="/" element={<Home/>} />
+      <Route path="/" element={<Home addToCart={addToCart}/> } />
       {/* Auth */}
       <Route path="/account/*" element={<AuthRouter isAuthenticated={isAuthenticated} onLogin={onLogin} />} />
 

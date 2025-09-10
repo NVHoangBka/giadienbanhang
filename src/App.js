@@ -6,17 +6,20 @@ import Footer from './views/components/Footer';
 import AppRouter from './routers';
 import ToastMessage from "./views/components/ToastMessage";
 
-
-const App = () => {
   const cartController = new CartController();
+  
+const App = () => {
   const [cartItems, setCartItems] = useState(cartController.getCartItems());
   const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState(null);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("info");
+
 
   const addToCart = (product) => {
     const updatedCart = cartController.addToCart(product);
-    setCartItems(updatedCart);
+    setCartItems([...updatedCart]);
     setToastMessage(`Đã thêm "${product.name}" vào giỏ hàng`);
+    setToastType("success");
     setShowToast(true);
   };
 
@@ -29,7 +32,7 @@ const App = () => {
 
   return (
     <Router>
-      <Header cartItems={cartItems} />
+      <Header cartController={cartController}/>
       <div className="">
         <AppRouter
           addToCart={addToCart}
@@ -39,12 +42,15 @@ const App = () => {
       </div>
       <Footer/>
 
-      {/* Toast hiển thị ở góc màn hình */}
-      <ToastMessage
-        show={showToast}
-        message={toastMessage}
-        onClose={() => setShowToast(false)}
-      />
+      <div className="toast-container position-fixed bottom-0 top-0 end-0">
+        {/* Toast hiển thị ở góc màn hình */}
+        <ToastMessage
+          show={showToast}
+          message={toastMessage}
+          type={toastType}
+          onClose={() => setShowToast(false)}
+        />
+      </div>
     </Router>
   );
 };

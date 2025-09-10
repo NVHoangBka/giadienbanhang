@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ProductModel from '../models/ProductModel';
 
-const Cart = ({isOpen,setIsCartOpen, cartController }) => {
-  const [quantity, setQuantity] = useState(1);
-  const unitPrice = 167000; 
+const Cart = ({isOpen,setIsCartOpen, cartController, onCartChange }) => {
 
   const [cartItems, setCartItems] = useState(cartController.getCartItems());
   const [total, setTotal] = useState(cartController.getTotalPrice());
@@ -15,31 +13,31 @@ const Cart = ({isOpen,setIsCartOpen, cartController }) => {
   useEffect(() => {
     setCartItems(cartController.getCartItems());
     setTotal(cartController.getTotalPrice());
-  }, [cartController]);
+  }, []);
  
 
   const handleIncrease = (id) => {
-    cartController.updateQuantity(id, cartItems.find(item => item.id === id).quantity + 1);
+     const updatedCart = cartController.updateQuantity(id, cartItems.find(item => item.id === id).quantity + 1);
     setCartItems([...cartController.getCartItems()]);
     setTotal(cartController.getTotalPrice());
+    onCartChange(updatedCart);
   };
 
   const handleDecrease = (id) => {
     const currentQty = cartItems.find(item => item.id === id).quantity;
-    cartController.updateQuantity(id, currentQty - 1);
+    const updatedCart =  cartController.updateQuantity(id, currentQty - 1);
     setCartItems([...cartController.getCartItems()]);
     setTotal(cartController.getTotalPrice());
+    onCartChange(updatedCart);
   };
 
   const handleRemove = (id) => {
-    cartController.removeFromCart(id);
+    const updatedCart = cartController.removeFromCart(id);
     setCartItems([...cartController.getCartItems()]);
     setTotal(cartController.getTotalPrice());
+    onCartChange(updatedCart);
   };
 
-const totalPrice = Number(unitPrice) * Number(quantity || 1);
-
-  // const totalPrice = ProductModel.calculateTotalPrice(cartItems);
 
   return (
     <div className={`cart ${isOpen ? 'active' : ''}`}>
@@ -92,7 +90,7 @@ const totalPrice = Number(unitPrice) * Number(quantity || 1);
                               
                               <div className="px-3 ms-5 d-flex  justify-content-between cart-quantity-col">
                                   <div className="cart-unit-price-col">
-                                    <div className="price text-danger fw-bold">{totalPrice.toLocaleString("vi-VN")}₫</div>
+                                    <div className="price text-danger fw-bold"> {((item.discountPrice || item.price) * item.quantity).toLocaleString("vi-VN")}₫</div>
                                   </div>
                                     <div className="input-group custom-number-input cart-item-quantity d-flex border rounded row" style={{'max-width': "100px", height: "28px"}}>
                                         <button 
@@ -102,7 +100,7 @@ const totalPrice = Number(unitPrice) * Number(quantity || 1);
                                           onClick={() => handleDecrease(item.id)}>
                                           <i className="bi bi-dash fs-5"></i>
                                         </button>
-                                        <input type="number" className="form-quantity col-6 text-center h-100 no-spinner border-0" name="Lines" data-line-index="1" value={quantity} min="1"/>
+                                        <input type="number" className="form-quantity col-6 text-center h-100 no-spinner border-0" name="Lines" data-line-index="1" value={item.quantity} min="1"/>
                                         <button 
                                           type="button" 
                                           name="plus" 

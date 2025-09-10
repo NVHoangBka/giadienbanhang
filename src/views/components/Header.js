@@ -1,4 +1,4 @@
-// views/Navbar.jsx
+
 import React, { useRef, useState } from 'react';
 
 import { Link, useNavigate } from "react-router-dom";
@@ -6,11 +6,8 @@ import AuthController from '../../controllers/AuthController';
 import Menu from './Menu';
 import Search from './Search';
 import Cart from '../Cart';
-import CartController from '../../controllers/CartController';
 
-const cartController = new CartController();  
-
-const Header = ({ cartItems }) => {
+const Header = ({cartController }) => {
   const navigate = useNavigate();
   const authController = new AuthController();
   const user = authController.getCurrentUser();
@@ -37,9 +34,10 @@ const Header = ({ cartItems }) => {
     setIsCartOpen(!isCartOpen);
   };
 
-   const totalQuantity = cartItems.reduce((sum, item) => sum + (item.quantity || 0), 0);
   
-
+  const [cartItems, setCartItems] = useState(cartController.getCartItems());
+   const totalQuantity = cartItems.reduce((sum, item) => sum + (item.quantity || 0), 0);
+    
 
   return (
     <header class="header">
@@ -98,7 +96,9 @@ const Header = ({ cartItems }) => {
             <Cart
               isOpen={isCartOpen}
               setIsCartOpen={setIsCartOpen}
+              cartItems={cartItems}
               cartController={cartController}
+              onCartChange={(updatedCart) => setCartItems(updatedCart)}
             />
             {isCartOpen && (
               <div
