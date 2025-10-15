@@ -2,7 +2,7 @@ import React from 'react';
 
 const ProductItem = ({ product, addToCart }) => {
   if (!product) {
-    return <div className="product-item col-2 p-3 border mx-2">Sản phẩm không tồn tại</div>;
+    return <div className="product-item p-3 border mx-2">Sản phẩm không tồn tại</div>;
   }
 
   const formatPrice = (price) => {
@@ -27,7 +27,7 @@ const ProductItem = ({ product, addToCart }) => {
 
 
   return (
-    <div className="product-item col-2 p-3 border mx-2 bg-white h-100 rounded-4">
+    <div className="product-item w-100 p-3 border mx-2 bg-white h-100 rounded-4">
       <img
         src={product.image}
         className="img-fluid rounded-start w-100"
@@ -36,7 +36,7 @@ const ProductItem = ({ product, addToCart }) => {
       <p className="mt-3 line-clamp-2 fs-body fw-semibold hover fixed-two-lines">{product.name}</p>
       <div className="more d-flex justify-content-between mx-1">
         <div className="price">
-          <p className="price-current m-0 text-warning fw-bold">
+          <p className="price-current m-0 text-danger fw-bold">
             {formatPrice(product.discountPrice || product.price)}
           </p>
           {product.discountPrice && (
@@ -46,7 +46,7 @@ const ProductItem = ({ product, addToCart }) => {
           )}
         </div>
         <button
-          className="text-warning border px-2 py-1 rounded-circle bg-warning-subtle hover"
+          className="text-danger border px-2 py-1 rounded-circle bg-warning-subtle hover"
           onClick={() => addToCart(product)}
           aria-label={`Add ${product.name} to cart`}
         >

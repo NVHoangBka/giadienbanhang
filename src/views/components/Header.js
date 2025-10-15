@@ -2,15 +2,15 @@
 import React, { useRef, useState } from 'react';
 
 import { Link, useNavigate } from "react-router-dom";
-import AuthController from '../../controllers/AuthController';
+// import AuthController from '../../controllers/AuthController';
 import Menu from './Menu';
 import Search from './Search';
 import Cart from '../Cart';
 
 const Header = ({cartController }) => {
   const navigate = useNavigate();
-  const authController = new AuthController();
-  const user = authController.getCurrentUser();
+  // const authController = new AuthController();
+  // const user = authController.getCurrentUser();
   const handleClickHome = () => {
     navigate("/");
   };
@@ -40,14 +40,14 @@ const Header = ({cartController }) => {
     
 
   return (
-    <header class="header">
-      <div class="header-top">
+    <header className="header">
+      <div className="header-top">
         <div className="container d-flex justify-content-between align-items-center">
-          <div class="header-top-left d-flex align-items-center" onClick={toggleMenu}>
+          <div className="header-top-left d-flex align-items-center" onClick={toggleMenu}>
             <button className="btn btn-outline-secondary border rounded-circle">
-              <i class="bi bi-list fs-5 "></i>
+              <i className="bi bi-list fs-5 "></i>
             </button>
-            <span class="header-top-left-text ms-1">Danh mục sản phẩm</span>
+            <span className="header-top-left-text ms-1">Danh mục sản phẩm</span>
           </div>
           <Menu
             isOpen={isMenuOpen}
@@ -60,16 +60,16 @@ const Header = ({cartController }) => {
               onClick={() => setIsMenuOpen(false)}
             ></div>
           )}
-          <div class="header-top-center text-center" onClick={handleClickHome} style={{ background: 'transparent' }}>
-            <img src="https://www.canva.com/design/DAGwwkhPGJ4/TrjwaRAGmJSgLHZRKbYLGg/view" alt="logo" class="header-logo h-75 w-50" />
+          <div className="header-top-center text-center" onClick={handleClickHome} style={{ background: 'transparent' }}>
+            <img src="https://www.canva.com/design/DAGwwkhPGJ4/TrjwaRAGmJSgLHZRKbYLGg/view" alt="logo" className="header-logo h-75 w-50" />
           </div>
-          <div class="header-top-right">
+          <div className="header-top-right">
             <button className="btn btn-outline-secondary border rounded-circle m-3" onClick={toggleSearch}>
-              <i class="bi bi-search fs-5"></i>
+              <i className="bi bi-search fs-5"></i>
             </button>
             <Search
               isOpen={isSearchOpen}
-              // SearchRef={SearchRef}
+              // Searcto={Searcto}
               setIsSearchOpen={setIsSearchOpen}
             />
             {isSearchOpen && (
@@ -110,38 +110,38 @@ const Header = ({cartController }) => {
           </div>
         </div>
       </div>
-      <div class="header-bottom bg-success">
+      <div className="header-bottom bg-success">
         <div className="container">
           <ul className="navbar justify-content-center list-unstyled row ms-5 me-5 p-3 text-white mb-0">
             <li className="nav-item hover col-2 text-center">
-              <a href="#" className="nav-link">
+              <Link to="#" className="nav-link">
                 Giới thiệu
-              </a>
+              </Link>
             </li>
             <li className="nav-item hover col-2 text-center">
-              <a href="#" className="nav-link">
+              <Link to="#" className="nav-link">
                 Khuyến mãi
-              </a>
+              </Link>
             </li>
             <li className="nav-item  hover col-2 text-center">
-              <a href="#" className="nav-link">
+              <Link to="#" className="nav-link">
                 Tin tức
-              </a>
+              </Link>
             </li>
             <li className="nav-item hover col-2 text-center">
-              <a href="#" className="nav-link">
-                Kiểm tra đơn hàng
-              </a>
+              <Link to="#" className="nav-link">
+                Kiểm trLink đơn hàng
+              </Link>
             </li>
             <li className="nav-item hover col-2 text-center">
-              <a href="#" className="nav-link">
+              <Link to="#" className="nav-link">
                 Liên hệ
-              </a>
+              </Link>
             </li>
             <li className="nav-item hover col-2 text-center">
-              <a href="#" className="nav-link">
+              <Link to="#" className="nav-link">
                 Hướng dẫn thiết lập
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

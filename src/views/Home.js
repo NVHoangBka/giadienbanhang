@@ -5,6 +5,7 @@ import ProductItem from './ProductItem';
 import ProductTabSection from './ProductTabSection';
 import BannerModel from '../models/BannerModel';
 import TitleModel from '../models/TitleModel';
+import { Link } from 'react-router-dom';
 
 const Home = ({ addToCart }) => {
   const flashSaleProducts = ProductModel.getProductsByFlashSale('flashsale');
@@ -31,10 +32,12 @@ const Home = ({ addToCart }) => {
             <h2 className="text-white ps-3 py-4 m-0">
               Chớp thời cơ. Giá như mơ
             </h2>
-            <div className="product-flashsale-list row px-1 m-0 justify-content-evenly">
+            <div className="product-flashsale-list row px-1 m-0 justify-content-center">
               {flashSaleProducts.length > 0 ? (
                 flashSaleProducts.map((product) => (
-                  <ProductItem key={product.id} product={product} addToCart={addToCart} />
+                  <div className='col-2'>
+                    <ProductItem key={product.id} product={product} addToCart={addToCart} />
+                    </div>
                 ))
               ) : (
                 <p className="text-center text-white">Không có sản phẩm flash sale.</p>
@@ -51,9 +54,9 @@ const Home = ({ addToCart }) => {
           <div className="container">
             <div className="collection-list row py-5 position-relative fs-6">
               {TitlesHome.map((title,index) => (
-                <a
+                <Link
                   key={index}
-                  href=""
+                  to="#"
                   className="collection-item text-center col text-white text-decoration-none"
                 >
                   <img
@@ -62,7 +65,7 @@ const Home = ({ addToCart }) => {
                     className="hover mb-1"
                   />
                   <p className="m-0">{title.name}</p>
-                </a>
+                </Link>
               ))}
             </div>
           </div>

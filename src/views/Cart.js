@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import ProductModel from '../models/ProductModel';
+// import ProductModel from '../models/ProductModel';
+import { Link } from 'react-router-dom';
 
 const Cart = ({isOpen,setIsCartOpen, cartController, onCartChange }) => {
 
   const [cartItems, setCartItems] = useState(cartController.getCartItems());
   const [total, setTotal] = useState(cartController.getTotalPrice());
 
-  const handleItemClick = () => {
-    setIsCartOpen(false);
-  };
+  // const handleItemClick = () => {
+  //   setIsCartOpen(false);
+  // };
 
   useEffect(() => {
     setCartItems(cartController.getCartItems());
     setTotal(cartController.getTotalPrice());
-  }, []);
+  }, [cartController]);
  
 
   const handleIncrease = (id) => {
@@ -51,34 +52,34 @@ const Cart = ({isOpen,setIsCartOpen, cartController, onCartChange }) => {
           {cartItems.length === 0 ?  
             ( <div className='cart-empty'>
                 <div className='text-black text-center'>
-                    <img src='https://bizweb.dktcdn.net/100/518/448/themes/953339/assets/cart_empty_background.png?1733201190476'></img>
-                    <h2 class=" font-bold">Giỏ hàng chưa có gì!</h2>
+                    <img src='https://bizweb.dktcdn.net/100/518/448/themes/953339/assets/cart_empty_background.png?1733201190476' alt=''/>
+                    <h2 className=" font-bold">Giỏ hàng chưLink có gì!</h2>
                     <p>Hãy tìm sản phẩm ứng ý và thêm vào giỏ hàng bạn nhé</p>
-                    <a class="btn font-bold bg-success text-white rounded-pill" href="/products/all" title="Tiếp tục mua sắm">Tiếp tục mua sắm</a>
+                    <Link className="btn font-bold bg-success text-white rounded-pill" to="/products/all" title="Tiếp tục mua sắm">Tiếp tục mua sắm</Link>
                 </div>
               </div>
             )
             : (
                 cartItems.map(item => (
-                  <>
+                  <div key={item.id}>
                     <div className='cart-left cart-left p-4 overflow-y-auto flex flex-col'>
                       <div className='cart-table'>
                         <div className='cart-items'>
                           <div className='cart-item'>
                               <div className='cart-product-col d-flex justify-content-between align-items-start'>
-                                  <a className='cart-item__image' href='#' title=''>
-                                      <img 
-                                        // src='https://bizweb.dktcdn.net/thumb/small/100/518/448/products/frame-106.jpg?v=1717485532697' 
-                                        src={item.image}
-                                        className='me-2 rounded'
-                                        style={{ width: "60px", height: "60px", objectFit: "cover" }}>
-                                      </img>
-                                  </a>
+                                  <Link className='cart-item__image' to='#' title=''>
+                                    <img 
+                                      src={item.image}
+                                      className='me-2 rounded'
+                                      alt=""
+                                      style={{ width: "60px", height: "60px", objectFit: "cover" }}
+                                    />
+                                  </Link>
                                   <div>
                                     <p className='cart-item__name mb-0 fw-semibold small'>
-                                      <a href="#" title={item.name} class="link text-decoration-none text-dark">{item.name}</a>
+                                      <Link to="#" title={item.name} className="link text-decoration-none text-dark">{item.name}</Link>
                                     </p>
-                                    <span class="cart-item__variant text-muted">{item.size}</span>
+                                    <span className="cart-item__variant text-muted">{item.size}</span>
                                   </div>
                                   <button
                                     className="btn btn-sm px-2 rounded-circle text-muted"
@@ -115,7 +116,7 @@ const Cart = ({isOpen,setIsCartOpen, cartController, onCartChange }) => {
                       </div>
                     </div>
                     <div className='cart-right'></div>
-                  </>
+                  </div>
                 ))
             ) 
           }

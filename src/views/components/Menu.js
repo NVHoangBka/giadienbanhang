@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Menu = ({ isOpen, menuRef, setIsMenuOpen }) => {
   const handleItemClick = () => {
@@ -10,7 +11,7 @@ const Menu = ({ isOpen, menuRef, setIsMenuOpen }) => {
       <div className='menu-container'>
 
         <div className='menu-header   d-flex flex justify-content-between py-3 px-4 align-items-center'>
-          <a className='header-icon-group text-reset d-flex text-decoration-none py-1 px-2 menu-hover'>
+          <Link className='header-icon-group text-reset d-flex text-decoration-none py-1 px-2 menu-hover'>
             <div className='header-icon align-content-center me-2'>
               <i className="bi bi-person fs-3 border px-1"></i>
             </div>
@@ -18,49 +19,49 @@ const Menu = ({ isOpen, menuRef, setIsMenuOpen }) => {
               <p className='mb-1 fs-6'>Tài khoản</p>
               <span className='fw-bold fs-6'>Đăng nhập</span>
             </div>
-          </a>
+          </Link>
           <button className='btn border rounded-circle px-1 py-0 h-50 ' onClick={() => setIsMenuOpen(false)}><i className="bi bi-x fs-4"></i></button>
         </div>
         <div className='menu-conten'>
           <ul className="menu-list">
             <li>
-              <a href="/products/all" onClick={handleItemClick} className='menu-hover'>Tất cả sản phẩm</a>
+              <Link to="/products/all" onClick={handleItemClick} className='menu-hover'>Tất cả sản phẩm</Link>
             </li>
             <li className="dropdown-submenu">
-              <a href="/products/thuc-pham-tuoi-song" title='Thực phẩm tươi sống' className='d-flex justify-content-between menu-hover'>
+              <Link to="/products/thuc-pham-tuoi-song" title='Thực phẩm tươi sống' className='d-flex justify-content-between menu-hover'>
                 <span>Thực phẩm tươi sống</span>
-                <i class="bi bi-caret-right-fill d-flex align-items-center"></i>
-              </a>
+                <i className="bi bi-caret-right-fill d-flex align-items-center"></i>
+              </Link>
               <ul className="menu-list">
-                <li className='menu-hover'><a href="#" onClick={handleItemClick}>Rau củ</a></li>
-                <li className='menu-hover'><a href="#" onClick={handleItemClick}>Hoa quả</a></li>
-                <li className='menu-hover'><a href="#" onClick={handleItemClick}>Thịt các loại</a></li>
-                <li className='menu-hover'><a href="#" onClick={handleItemClick}>Thủy hải sản</a></li>
+                <li className='menu-hover'><Link to="#" onClick={handleItemClick}>Rau củ</Link></li>
+                <li className='menu-hover'><Link to="#" onClick={handleItemClick}>HoLink quả</Link></li>
+                <li className='menu-hover'><Link to="#" onClick={handleItemClick}>Thịt các loại</Link></li>
+                <li className='menu-hover'><Link to="#" onClick={handleItemClick}>Thủy hải sản</Link></li>
               </ul>
             </li>
           </ul>
           <ul className="menu-list">
             <li>
-              <a href="#" onClick={handleItemClick} className='menu-hover'>Giới thiệu</a>
+              <Link to="#" onClick={handleItemClick} className='menu-hover'>Giới thiệu</Link>
             </li>
             <li className="dropdown-submenu">
-              <a href="#" title='Thực phẩm tươi sống' className='d-flex justify-content-between menu-hover'>
+              <Link to="#" title='Thực phẩm tươi sống' className='d-flex justify-content-between menu-hover'>
                 <span>Khuyến mãi</span>
-                <i class="bi bi-caret-right-fill d-flex align-items-center"></i>
-              </a>
+                <i className="bi bi-caret-right-fill d-flex align-items-center"></i>
+              </Link>
               <ul className="menu-list">
-                <li className='menu-hover'><a href="#" onClick={handleItemClick}>Flash Sale 1 khung giờ</a></li>
-                <li className='menu-hover'><a href="#" onClick={handleItemClick}>Flash Sale nhiều khung giờ</a></li>
+                <li className='menu-hover'><Link to="#" onClick={handleItemClick}>Flash Sale 1 khung giờ</Link></li>
+                <li className='menu-hover'><Link to="#" onClick={handleItemClick}>Flash Sale nhiều khung giờ</Link></li>
               </ul>
             </li>
             <li>
-              <a href="#" onClick={handleItemClick} className='menu-hover'>Tin tức</a>
+              <Link to="#" onClick={handleItemClick} className='menu-hover'>Tin tức</Link>
             </li>
             <li>
-              <a href="#" onClick={handleItemClick} className='menu-hover'>Kiểm tra đơn hàng</a>
+              <Link to="#" onClick={handleItemClick} className='menu-hover'>Kiểm trLink đơn hàng</Link>
             </li>
             <li>
-              <a href="#" onClick={handleItemClick} className='menu-hover'>Liên hệ</a>
+              <Link to="#" onClick={handleItemClick} className='menu-hover'>Liên hệ</Link>
             </li>
           </ul>
         </div>

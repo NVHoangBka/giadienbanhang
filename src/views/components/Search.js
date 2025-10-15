@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Search = ({ isOpen, setIsSearchOpen }) => {
   const handleItemClick = () => {
@@ -10,9 +11,9 @@ const Search = ({ isOpen, setIsSearchOpen }) => {
        <div className='container text-black'>
             <div className='mt-3'>
               <div className='search-header d-flex align-items-center'>
-                <a href='#' onClick={handleItemClick}>
+                <Link to='#' onClick={handleItemClick}>
                   <i className="bi bi-arrow-left fs-4 "></i>
-                </a>
+                </Link>
                 <h4 className='fw-bold m-0 px-3 fs-3'>Tìm Kiếm</h4>
               </div>
             <div className='search-bar'>
@@ -38,11 +39,11 @@ const Search = ({ isOpen, setIsSearchOpen }) => {
                     <div className='search-result'></div>
                     <div className='search-history-list'></div>
                     <div className='search-keywords pt-2 px-2'>
-                        <span class="text-success font-semibold mx-2">Từ khóa phổ biến</span>
+                        <span className="text-success font-semibold mx-2">Từ khóa phổ biến</span>
                         <div className='search-keyword-list mt-2'>
-                          <a className='search-keyword '>Nước giặt</a>
-                          <a className='search-keyword'>Nước giặt</a>
-                          <a className='search-keyword'>Nước giặt</a>
+                          <Link className='search-keyword '>Nước giặt</Link>
+                          <Link className='search-keyword'>Nước giặt</Link>
+                          <Link className='search-keyword'>Nước giặt</Link>
                         </div> 
                     </div>
                 </div>

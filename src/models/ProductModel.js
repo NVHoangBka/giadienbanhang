@@ -238,7 +238,7 @@ class ProductModel {
 
   // Lấy sản phẩm theo flashSale
   static getProductsByFlashSale(type) {
-    if (type == 'flashsale') {
+    if (type === 'flashsale') {
       return products.filter((product) => product.falseSale);
     }
     

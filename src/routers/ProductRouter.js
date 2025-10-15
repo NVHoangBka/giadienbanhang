@@ -1,8 +1,6 @@
 import React from 'react';
 import { Route, Navigate, Routes } from 'react-router-dom';
-import ProductCard from '../views/ProductCard';
 import ProductDetail from '../views/ProductDetail';
-import ProductModel from '../models/ProductModel';
 import Product from '../views/Product';
 
 const ProductRouter = ({ isAuthenticated, addToCart }) => {
@@ -16,7 +14,15 @@ const ProductRouter = ({ isAuthenticated, addToCart }) => {
         path="/all"
         element={
           // <ProtectedRoute>
-            <Product path='all'></Product>
+            <Product addToCart={addToCart} path='all'></Product>
+          // </ProtectedRoute>
+        }
+      />
+      <Route  
+        path="/thuc-pham-tuoi-song"
+        element={
+          // <ProtectedRoute>
+            <Product addToCart={addToCart} path='thuc-pham-tuoi-song'></Product>
           // </ProtectedRoute>
         }
       />

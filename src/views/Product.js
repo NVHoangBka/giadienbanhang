@@ -1,360 +1,644 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import ProductItem from './ProductItem';
+import ProductModel from '../models/ProductModel';
 
-const Product = ({ path }) => {
+const Product = ({ path, addToCart }) => {
+
+    const [activeTab, setActiveTab] = useState(path|| null);
+    // state cho phân trang
+    const [currentPage, setCurrentPage] = useState(1);
+    const productsPerPage = 12;
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [filters, setFilters] = useState({
+        price: null,
+        brand: [],
+        type: [],
+        color: [],
+    });
+
+    const resetAllFilters = () => {
+        setFilters({
+            price: null,
+            brand: [],
+            type: [],
+            color: [],
+        });
+        
+       // Bỏ tích tất cả checkbox & radio
+        document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(input => {
+            input.checked = false;
+        });
+    };
+
+      // Lấy danh sách sản phẩm ban đầu theo path
+    useEffect(() => {
+        const allProducts =
+        activeTab === 'all'
+            ? ProductModel.getAllProducts()
+            : ProductModel.getProductsByType(activeTab);
+        setFilteredProducts(allProducts);
+    }, [activeTab]);
+
+    // Hàm thay đổi filter
+    const handleFilterChange = (key, e) => {
+        const { type, checked, value } = e.target;
+        const label = e.target.getAttribute('data-value');
+
+        setFilters((prev) => {
+            let updated = { ...prev };
+
+            if (type === 'checkbox') {
+                // --- Checkbox: có thể chọn nhiều ---
+                if (checked) {
+                    // 🔒 Kiểm tra trùng trước khi push
+                    const exist = updated[key]?.some((item) => item.value === value);
+                    if (!exist) {
+                    updated[key] = [...(updated[key] || []), { value, label }];
+                    }
+                } else {
+                    updated[key] = (updated[key] || []).filter(
+                    (item) => item.value !== value
+                    );
+                }
+
+                if (updated[key].length === 0) delete updated[key];
+            }
+
+            if (type === 'radio') {
+                // --- Radio: chỉ chọn 1 ---
+                updated[key] = [{ value, label }];
+            }
+
+            return updated;
+        });
+    };
+
+    const removeFilterItem = (key, value) => {
+        setFilters((prev) => {
+            const updated = { ...prev };
+            updated[key] = updated[key].filter((item) => item.value !== value);
+            if (updated[key].length === 0) delete updated[key];
+            return updated;
+        });
+
+        // Bỏ tích / bỏ chọn input tương ứng
+        const input = document.querySelector(
+            `input[name="${key}"][value="${value}"]`
+        );
+        if (input) input.checked = false;
+    };
+
+    // Áp dụng filter khi filters thay đổi
+    useEffect(() => {
+        let products =
+        activeTab === 'all'
+            ? ProductModel.getAllProducts()
+            : ProductModel.getProductsByType(activeTab);
+
+        // --- Lọc theo giá ---
+        if (filters.price?.length > 0) {
+            const priceValue = filters.price[0].value; // ví dụ: "0-500000"
+            const [min, max] = priceValue.split('-').map(Number);
+            products = products.filter(
+            (p) => p.price >= min && (max ? p.price <= max : true)
+            );
+        }
+
+        // --- Lọc theo hãng ---
+        if (filters.brand?.length > 0) {
+            const brandValues = filters.brand.map((b) => b.value);
+            products = products.filter((p) => brandValues.includes(p.brand));
+        }
+
+        // --- Lọc theo loại ---
+        if (filters.type?.length > 0) {
+            const typeValues = filters.type.map((t) => t.value);
+            products = products.filter((p) => typeValues.includes(p.type));
+        }
+
+        // --- Lọc theo màu ---
+        if (filters.color?.length > 0) {
+            const colorValues = filters.color.map((c) => c.value);
+            products = products.filter((p) => colorValues.includes(p.color));
+        }
+
+        setFilteredProducts(products);
+        setCurrentPage(1);
+    }, [filters, activeTab]);
+
+    // tính toán vị trí sản phẩm
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+    const handlePageChange = (pageNumber) => {
+        if (pageNumber < 1 || pageNumber > totalPages) return;
+        setCurrentPage(pageNumber);
+        // window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const onColorChange = (e) => handleFilterChange('color', e);
+    const onTypeChange = (e) => handleFilterChange('type', e);
+    const onBrandChange = (e) => handleFilterChange('brand', e);
+    const onPriceChange = (e) => handleFilterChange('price', e);
+    const onTagChange = (e) => handleFilterChange('tag', e);
+
   return (
-    <div className="container">
-        <div className='breadcrumbs'>
-            <ul className="breadcrumb py-3 flex flex-wrap items-center text-xs md:text-sm">
-                <li class="home">
-                    <a className="link hover" href="/" title="Trang chủ" style={{textDecoration: 'none', color: 'black'}}><span>Trang chủ</span></a>
-                    <span class="mx-1 md:mx-2 inline-block">&nbsp;/&nbsp;</span>
-                </li>
-                <li>
-                    <span style={{ color: '#BFBFBF' }}>Tất cả sản phẩm</span>
-                </li>          
-            </ul>
-        </div>
-        <section className="section section-collection-banner">
-             <div class="collection_banner mb-4 md:mb-6  container text-center">
-                <a class="banner" href="/collections/all" title="Tất cả sản phẩm">
-                    <picture>
-                        <source media="(max-width: 767px)" srcset="//bizweb.dktcdn.net/thumb/large/100/518/448/themes/953339/assets/collection_main_banner.jpg?1758526220617"/>
-                        <img class="object-contain mx-auto" src="https://bizweb.dktcdn.net/100/518/448/themes/953339/assets/collection_main_banner.jpg?1758526220617" width="1432" height="120" alt="Tất cả sản phẩm" style={{height: 'auto'}}/>
-                    </picture>
-                </a>
+    <div className="product bg-success-subtle">
+        <div className="container">
+            <div className='breadcrumbs'>
+                <ul className="breadcrumb py-3 flex flex-wrap items-center text-xs md:text-sm">
+                    <li className="home">
+                        <Link className="link hover" to="/" title="Trang chủ" style={{textDecoration: 'none', color: 'black'}}><span>Trang chủ</span></Link>
+                        <span className="mx-1 md:mx-2 inline-block">&nbsp;/&nbsp;</span>
+                    </li>
+                    <li>
+                        <span style={{ color: '#BFBFBF' }}>Tất cả sản phẩm</span>
+                    </li>          
+                </ul>
             </div>
-        </section>
-        <section className='section grid w-100' id="product-list-0" style={{height: '30px'}}>
-            <div className='row'>
-                <div className='col-9 content-product-left'>
-                    <h2>Tất cả sản phẩm</h2>
+            <section className="section section-collection-banner">
+                <div className="collection_banner mb-5 md:mb-5  container text-center px-0">
+                    <Link className="banner" to="/collections/all" title="Tất cả sản phẩm">
+                        <picture>
+                            <source media="(max-width: 767px)" srcset="//bizweb.dktcdn.net/thumb/large/100/518/448/themes/953339/assets/collection_main_banner.jpg?1758526220617"/>
+                            <img className="object-contain mx-auto" src="https://bizweb.dktcdn.net/100/518/448/themes/953339/assets/collection_main_banner.jpg?1758526220617" width="1432" height="120" alt="Tất cả sản phẩm" style={{height: 'auto', width: '100%'}}/>
+                        </picture>
+                    </Link>
                 </div>
-                <div className='col-3 content-product-right'>
-                    <facet-drawer data-collection="0">
-                        <div class="collection-filter h-full hidden xl:block ">
-                            <div class="facet-overlay absolute z-0 w-full h-full inset-x-0 xl:hidden bg-[rgba(0,0,0,0.5)]" data-toggle-facet="">	
+            </section>
+            <section className='section grid w-100' id="product-list-0">
+                <div className='row mx-0'>
+                    <div className='col-9 content-product-left'>
+                        <h2 className='text-success fs-1 fw-bold'>Tất cả sản phẩm</h2>
+                        <div className='d-left flex-row-reverse align-items-center mb-2'>                           
+                            <div className="d-flex justify-content-end">
+                                <button className="btn d-flex d-lg-none bg-white border align-items-center" type="button" data-toggle-facet="" hidden>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="icon w-4" viewBox="0 0 20 20" fill="none">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.79166 6.45835C9.79166 5.53788 10.5379 4.79169 11.4583 4.79169C12.3788 4.79169 13.125 5.53788 13.125 6.45835C13.125 7.37883 12.3788 8.12502 11.4583 8.12502C10.5379 8.12502 9.79166 7.37883 9.79166 6.45835ZM8.60878 7.08335C8.89489 8.39384 10.062 9.37502 11.4583 9.37502C12.8546 9.37502 14.0218 8.39384 14.3079 7.08335H17.5C17.8452 7.08335 18.125 6.80353 18.125 6.45835C18.125 6.11317 17.8452 5.83335 17.5 5.83335H14.3079C14.0218 4.52286 12.8546 3.54169 11.4583 3.54169C10.062 3.54169 8.89489 4.52286 8.60878 5.83335H2.5C2.15482 5.83335 1.875 6.11317 1.875 6.45835C1.875 6.80353 2.15482 7.08335 2.5 7.08335H8.60878ZM4.79166 13.125C4.79166 12.2045 5.53786 11.4583 6.45833 11.4583C7.3788 11.4583 8.125 12.2045 8.125 13.125C8.125 14.0455 7.3788 14.7917 6.45833 14.7917C5.53786 14.7917 4.79166 14.0455 4.79166 13.125ZM6.45833 16.0417C5.06203 16.0417 3.8949 15.0605 3.60879 13.75H2.5C2.15482 13.75 1.875 13.4702 1.875 13.125C1.875 12.7798 2.15482 12.5 2.5 12.5H3.60879C3.8949 11.1895 5.06203 10.2083 6.45833 10.2083C7.85463 10.2083 9.02176 11.1895 9.30787 12.5H17.5C17.8452 12.5 18.125 12.7798 18.125 13.125C18.125 13.4702 17.8452 13.75 17.5 13.75H9.30787C9.02176 15.0605 7.85463 16.0417 6.45833 16.0417Z" fill="currentColor" fill-opacity="0.1"></path>
+                                    </svg>
+                                    Lọc
+                                    <span className="filter-count w-5 h-5 md:w-6 md:h-6 inline-flex items-center justify-center bg-[#EE1926] text-white rounded-full  ml-1">0</span>
+                                </button>
+                                <div className="sort-mobile whitespace-nowrap d-flex align-items-center gap-2 ml-auto me-3">
+                                    <label for="sort-mobile" className="labbel text-light-emphasis"> Sắp xếp </label>
+                                    <sort-by data-collection="0">
+                                        <select name="sort_by" id="sort-mobile" className="form-select  bg-white rounded-pill">
+                                            <option value="manual">Mặc định</option>
+                                            <option value="name:asc">Tên A → Z</option>
+                                            <option value="name:desc">Tên Z → A</option>
+                                            <option value="price_min:asc">Giá tăng dần</option>
+                                            <option value="price_min:desc">Giá giảm dần</option>
+                                            <option value="created_on:desc">Mới nhất</option>
+                                            <option value="created_on:asc">Cũ nhất</option>
+                                        </select>
+                                    </sort-by>
+                                </div>
                             </div>
-                            <div class="facet-inner overflow-auto bg-background  h-full  xl:h-auto px-5 md:rounded-sm max-w-[32rem] z-10 relative ml-auto">
-                                <form class="facet-form">
-                                
-                                <div class="filter-container flex flex-col rounded-sm bg-neutral-50 ">
-                                    <div class="facet-header xl:hidden flex justify-center items-center md:py-5 py-4 bg-background relative">
-                                        <button type="button" data-toggle-facet="" class="absolute left-0 btn border border-neutral-50 rounded-full p-1 inline-flex items-center justify-center w-[3.6rem] h-[3.6rem]">
-                                            <i class="icon icon-arrow-left"></i>
-                                        </button>
-                                        <div>
-                                                Lọc
-                                                <span class="filter-count w-5 h-5 md:w-6 md:h-6 inline-flex items-center justify-center bg-[#EE1926] text-white rounded-full  ml-1">0</span>
+                            <div className="filter-items w-100 d-flex flex-wrap mb-3">
+                                {Object.entries(filters || {}).flatMap(([key, items]) =>
+                                    Array.isArray(items)
+                                        ? items.map((item) => (
+                                            <div
+                                            key={`${key}-${item.value}`}
+                                            className="filter-item bg-white d-flex fw-semibold items-center justify-content-center border rounded-1 py-1 px-3 relative cursor-pointer link mx-1 hover"
+                                            >
+                                            {item.label}
+                                            <span
+                                                className="js-remove-filter cursor-pointer"
+                                                onClick={() => removeFilterItem(key, item.value)}
+                                            >
+                                                <i className="bi bi-x"></i>
+                                            </span>
                                             </div>
-                                    </div>              
-                            <aside class="aside-item filter-price md:py-5 py-4" style="order: 4">
-                                <div class="aside-title">
-                                <h2 class="title-head margin-top-0 text-base font-semibold mb-3">
-                                    Giá
-                                </h2>
-                                </div>
-                                <div class="aside-content filter-group">
-                                    <ul class="space-y-3">
-                                        <li class="filter-item filter-item--check-box link">
-                                            <label class="custom-radio cursor-pointer flex gap-2 items-center" for="filter-lower-1000000">
-                                            <input class="form-radio" name="price_min" type="radio" id="filter-lower-1000000" data-group="price" data-field="price_min" data-value="Giá dưới 1.000.000₫" value="0:1000000" data-operator="OR"/>
-                                            Giá dưới 1.000.000₫
-                                            </label>
-                                        </li>                   
-                                        <li class="filter-item filter-item--check-box link">
-                                            <label class="custom-radio cursor-pointer flex gap-2 items-center" for="filter-1000000-2000000">
-                                            <input class="form-radio" name="price_min" type="radio" id="filter-1000000-2000000" data-group="price" data-field="price_min" data-value="1.000.000₫ - 2.000.000₫" value="1000000:2000000" data-operator="OR"/>
-                                            1.000.000₫ - 2.000.000₫
-                                            </label>
-                                        </li>               
-                                        <li class="filter-item filter-item--check-box link">
-                                            <label class="custom-radio cursor-pointer flex gap-2 items-center" for="filter-2000000-3000000">
-                                            <input class="form-radio" name="price_min" type="radio" id="filter-2000000-3000000" data-group="price" data-field="price_min" data-value="2.000.000₫ - 3.000.000₫" value="2000000:3000000" data-operator="OR"/>
-                                            2.000.000₫ - 3.000.000₫
-                                            </label>
-                                        </li>                
-                                        <li class="filter-item filter-item--check-box link">
-                                            <label class="custom-radio cursor-pointer flex gap-2 items-center" for="filter-3000000-5000000">
-                                            <input class="form-radio" name="price_min" type="radio" id="filter-3000000-5000000" data-group="price" data-field="price_min" data-value="3.000.000₫ - 5.000.000₫" value="3000000:5000000" data-operator="OR"/>
-                                            3.000.000₫ - 5.000.000₫
-                                            </label>
-                                        </li>                  
-                                        <li class="filter-item filter-item--check-box link">
-                                            <label class="custom-radio cursor-pointer flex gap-2 items-center" for="filter-5000000-7000000">
-                                            <input class="form-radio" name="price_min" type="radio" id="filter-5000000-7000000" data-group="price" data-field="price_min" data-value="5.000.000₫ - 7.000.000₫" value="5000000:7000000" data-operator="OR"/>
-                                            5.000.000₫ - 7.000.000₫
-                                            </label>
-                                        </li>                    
-                                        <li class="filter-item filter-item--check-box link">
-                                            <label class="custom-radio cursor-pointer flex gap-2 items-center" for="filter-7000000-10000000">
-                                            <input class="form-radio" name="price_min" type="radio" id="filter-7000000-10000000" data-group="price" data-field="price_min" data-value="7.000.000₫ - 10.000.000₫" value="7000000:10000000" data-operator="OR"/>
-                                            7.000.000₫ - 10.000.000₫
-                                            </label>
-                                        </li>
-                                        <li class="filter-item filter-item--check-box link">
-                                            <label class="custom-radio cursor-pointer flex gap-2 items-center" for="filter-upper-10000000">
-                                            <input class="form-radio" name="price_min" type="radio" id="filter-upper-10000000" data-group="price" data-field="price_min" data-value="Giá trên 10.000.000₫" value="10000000:max" data-operator="OR"/>
-                                            Giá trên 10.000.000₫
-                                            </label>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </aside>
-                            <aside class="aside-item filter-vendor md:py-5 py-4" style="order: 1">
-                                <div class="aside-title">
-                                <h2 class="title-head margin-top-0 text-base font-semibold mb-3">
-                                    Hãng sản xuất
-                                </h2>
-                                </div>
-                                <div class="aside-content filter-group">
-                                    <ul class="space-y-3">
-                                        <li class="filter-item  link filter-item--check-box ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-vendor-minimart">
-                                            <input type="checkbox" class="form-checkbox" id="filter-vendor-minimart" data-group="PRODUCT_VENDOR" data-field="vendor.filter_key" data-value="Minimart" value="Minimart" data-operator="OR" name="vendor"/>
-                                            Minimart
-                                        </label>
-                                        </li>
-                                        <li class="filter-item  link filter-item--check-box ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-vendor-ega">
-                                            <input type="checkbox" class="form-checkbox" id="filter-vendor-ega" data-group="PRODUCT_VENDOR" data-field="vendor.filter_key" data-value="EGA" value="EGA" data-operator="OR" name="vendor"/>
-                                            EGA
-                                        </label>
-                                        </li>
-                                        <li class="filter-item  link filter-item--check-box ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-vendor-ega-green">
-                                            <input type="checkbox" class="form-checkbox" id="filter-vendor-ega-green" data-group="PRODUCT_VENDOR" data-field="vendor.filter_key" data-value="EGA GREEN" value="EGA GREEN" data-operator="OR" name="vendor"/>
-                                            EGA GREEN
-                                        </label>
-                                        </li>
-                                        <li class="filter-item  link filter-item--check-box ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-vendor-khac">
-                                            <input type="checkbox" class="form-checkbox" id="filter-vendor-khac" data-group="PRODUCT_VENDOR" data-field="vendor.filter_key" data-value="Khác" value="Khác" data-operator="OR" name="vendor"/>
-                                            Khác
-                                        </label>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </aside>            
-                            <aside class="aside-item filter-type md:py-5 py-4 " style="order: 2">
-                                <div class="aside-title">
-                                <h2 class="title-head margin-top-0 text-base font-semibold mb-3">
-                                    Loại sản phẩm
-                                </h2>
-                                </div>
-                                <div class="aside-content filter-group">
-                                    <ul class="space-y-3">
-                                        <li class="filter-item link filter-item--check-box ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-type-lam-thom">
-                                            <input type="checkbox" class="form-checkbox" id="filter-type-lam-thom" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Làm thơm" value="Làm thơm" data-operator="OR" name="type"/>
-                                            Làm thơm
-                                        </label>
-                                        </li>
-                                        <li class="filter-item link filter-item--check-box ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-type-chat-tay-rua">
-                                            <input type="checkbox" class="form-checkbox" id="filter-type-chat-tay-rua" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Chất tẩy rửa" value="Chất tẩy rửa" data-operator="OR" name="type"/>
-                                            Chất tẩy rửa
-                                        </label>
-                                        </li>
-                                        <li class="filter-item link filter-item--check-box ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-type-do-dung-hoc-tap">
-                                            <input type="checkbox" class="form-checkbox" id="filter-type-do-dung-hoc-tap" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Đồ dùng học tập" value="Đồ dùng học tập" data-operator="OR" name="type"/>
-                                            Đồ dùng học tập
-                                        </label>
-                                        </li>
-                                        <li class="filter-item link filter-item--check-box ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-type-van-phong">
-                                            <input type="checkbox" class="form-checkbox" id="filter-type-van-phong" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Văn phòng" value="Văn phòng" data-operator="OR" name="type"/>
-                                            Văn phòng
-                                        </label>
-                                        </li>
-                                        <li class="filter-item link filter-item--check-box ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-type-nhap-khau">
-                                            <input type="checkbox" class="form-checkbox" id="filter-type-nhap-khau" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Nhập khẩu" value="Nhập khẩu" data-operator="OR" name="type"/>
-                                            Nhập khẩu
-                                        </label>
-                                        </li>
-                                        <li class="filter-item link filter-item--check-box  overflow-item ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-type-nong-san-viet">
-                                            <input type="checkbox" class="form-checkbox" id="filter-type-nong-san-viet" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Nông sản Việt" value="Nông sản Việt" data-operator="OR" name="type"/>
-                                            Nông sản Việt
-                                        </label>
-                                        </li>
-                                        <li class="filter-item link filter-item--check-box  overflow-item ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-type-nhiet-doi">
-                                            <input type="checkbox" class="form-checkbox" id="filter-type-nhiet-doi" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Nhiệt đới" value="Nhiệt đới" data-operator="OR" name="type"/>
-                                            Nhiệt đới
-                                        </label>
-                                        </li>
-                                        <li class="filter-item link filter-item--check-box  overflow-item ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-type-thuc-pham-tuoi-song">
-                                            <input type="checkbox" class="form-checkbox" id="filter-type-thuc-pham-tuoi-song" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Thực phẩm tươi sống" value="Thực phẩm tươi sống" data-operator="OR" name="type"/>
-                                            Thực phẩm tươi sống
-                                        </label>
-                                        </li>
-                                        <li class="filter-item link filter-item--check-box  overflow-item ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-type-thuc-pham">
-                                            <input type="checkbox" class="form-checkbox" id="filter-type-thuc-pham" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Thực phẩm" value="Thực phẩm" data-operator="OR" name="type"/>
-                                            Thực phẩm
-                                        </label>
-                                        </li>
-                                        <li class="filter-item link filter-item--check-box  overflow-item ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-type-khac">
-                                            <input type="checkbox" class="form-checkbox" id="filter-type-khac" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Khác" value="Khác" data-operator="OR" name="type"/>
-                                            Khác
-                                        </label>
-                                        </li>  
-                                        <li class="filter-item-toggle link text-secondary font-semibold cursor-pointer  flex items-center pl-[var(--spacing-6-5)] gap-2   ">
-                                        Xem thêm <i class="icon icon-carret-down"></i>
-                                        </li>
-                                                
-                                    </ul>
-                                </div>
-                            </aside>
-                            <aside class="aside-item filter-tag1 md:py-5 py-4 " style="order: 0">
-                                <div class="aside-title">
-                                <h2 class="title-head margin-top-0 text-base font-semibold mb-3">
-                                    Màu sắc
-                                </h2>
-                                </div>
-                                <div class="aside-content filter-group">
-                                <ul class="space-y-3">
-                                        <li class="filter-item link filter-item--check-box ">
-                                            <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-tag1-trang">
-                                                <input type="checkbox" class="form-checkbox" id="filter-tag1-trang" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Trắng" value="Trắng" data-operator="OR" name="tag"/>
-                                                Trắng
-                                            </label>
-                                        </li>
-                                        <li class="filter-item link filter-item--check-box ">
-                                            <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-tag1-den">
-                                                <input type="checkbox" class="form-checkbox" id="filter-tag1-den" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Đen" value="Đen" data-operator="OR" name="tag"/>
-                                                Đen
-                                            </label>
-                                        </li>       
-                                        <li class="filter-item link filter-item--check-box ">
-                                            <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-tag1-xam">
-                                                <input type="checkbox" class="form-checkbox" id="filter-tag1-xam" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Xám" value="Xám" data-operator="OR" name="tag"/>
-                                                Xám
-                                            </label>
-                                        </li>      
-                                        <li class="filter-item link filter-item--check-box ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-tag1-xanh-duong">
-                                            <input type="checkbox" class="form-checkbox" id="filter-tag1-xanh-duong" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Xanh dương" value="Xanh dương" data-operator="OR" name="tag"/>
-                                            Xanh dương
-                                        </label>
-                                        </li>
-                                        <li class="filter-item link filter-item--check-box ">
-                                            <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-tag1-do">
-                                                <input type="checkbox" class="form-checkbox" id="filter-tag1-do" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Đỏ" value="Đỏ" data-operator="OR" name="tag"/>
-                                                Đỏ
-                                            </label>
-                                        </li>      
-                                        <li class="filter-item link filter-item--check-box  overflow-item ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-tag1-hong">
-                                            <input type="checkbox" class="form-checkbox" id="filter-tag1-hong" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Hồng" value="Hồng" data-operator="OR" name="tag"/>
-                                            Hồng
-                                        </label>
-                                        </li>       
-                                        <li class="filter-item link filter-item--check-box  overflow-item ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-tag1-tim">
-                                            <input type="checkbox" class="form-checkbox" id="filter-tag1-tim" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Tím" value="Tím" data-operator="OR" name="tag"/>
-                                            Tím
-                                        </label>
-                                        </li>
-                                        <li class="filter-item link filter-item--check-box  overflow-item ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-tag1-xanh-reu">
-                                            <input type="checkbox" class="form-checkbox" id="filter-tag1-xanh-reu" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Xanh rêu" value="Xanh rêu" data-operator="OR" name="tag"/>
-                                            Xanh rêu
-                                        </label>
-                                        </li>    
-                                        <li class="filter-item link filter-item--check-box  overflow-item ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-tag1-kem">
-                                            <input type="checkbox" class="form-checkbox" id="filter-tag1-kem" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Kem" value="Kem" data-operator="OR" name="tag"/>
-                                            Kem
-                                        </label>
-                                        </li>
-                                    
-                                            
-                                                
-                                        <li class="filter-item link filter-item--check-box  overflow-item ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-tag1-bac">
-                                            <input type="checkbox" class="form-checkbox" id="filter-tag1-bac" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Bạc" value="Bạc" data-operator="OR" name="tag">
-                                            Bạc
-                                        </label>
-                                        </li>
-                                    
-                                                <li class="filter-item-toggle link text-secondary font-semibold cursor-pointer  flex items-center pl-[var(--spacing-6-5)] gap-2   ">
-                                        Xem thêm <i class="icon icon-carret-down"></i>
-                                        </li>
-                                            
-                                </ul>
-                                </div>
-                            </aside>
+                                        ))
+                                        : [] // 👈 nếu items = null hoặc không phải mảng thì bỏ qua
+                                )}
 
-                                                
-                                        
-                                    
-                                        
-                                            
-                                            
-                                            
-                                                
-
-
-                            <aside class="aside-item filter-tag1 md:py-5 py-4" style="order: 0">
-                                <div class="aside-title">
-                                <h2 class="title-head margin-top-0 text-base font-semibold mb-3">
-                                    Tags
-                                </h2>
-                                </div>
-                                <div class="aside-content filter-group">
-                                <ul class="space-y-3">
-                                    
-                                    
-                                                
-                                        <li class="filter-item link filter-item--check-box ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-tag1-flash-sale">
-                                            <input type="checkbox" class="form-checkbox" id="filter-tag1-flash-sale" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Flash Sale" value="Flash Sale" data-operator="OR" name="tag">
-                                            Flash Sale
-                                        </label>
-                                        </li>
-                                    
-                                            
-                                                
-                                        <li class="filter-item link filter-item--check-box ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-tag1-giao-nhanh-24h">
-                                            <input type="checkbox" class="form-checkbox" id="filter-tag1-giao-nhanh-24h" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Giao Nhanh 24h" value="Giao Nhanh 24h" data-operator="OR" name="tag">
-                                            Giao Nhanh 24h
-                                        </label>
-                                        </li>
-                                    
-                                            
-                                                
-                                        <li class="filter-item link filter-item--check-box ">
-                                        <label class="custom-checkbox cursor-pointer flex gap-2 items-center" for="filter-tag1-rau-tuoi">
-                                            <input type="checkbox" class="form-checkbox" id="filter-tag1-rau-tuoi" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Rau Tươi" value="Rau Tươi" data-operator="OR" name="tag">
-                                            Rau Tươi
-                                        </label>
-                                        </li>
-                                    
-                                            
-                                </ul>
-                                </div>
-                            </aside>
-
-                                            
-                                        
-                                    
-                                    
+                                 {/* Nút reset tất cả */}
+                                {Object.values(filters).some(v => Array.isArray(v) && v.length > 0) && (
+                                    <div
+                                        className="filter-item text-danger border rounded-1 py-1 px-3 mx-1 my-1 cursor-pointer"
+                                        onClick={resetAllFilters}
+                                    >
+                                        Xóa tất cả
                                     </div>
-                                </form>
+                                )}
                             </div>
-                                
                         </div>
-                    </facet-drawer>
+                        <div className='product-list grid me-2'>
+                            <div className='product-items' style={{minHeight: '1200px'}}>
+                                <div className='row'>
+                                    {currentProducts.length > 0 ? (
+                                        currentProducts.map((product) => (
+                                            <div className='col-3 my-3' key={product.id}>
+                                            <ProductItem product={product} addToCart={addToCart} />
+                                            </div>
+                                        ))
+                                        ) : (
+                                        <p className="text-center">Không có sản phẩm nào trong danh mục này.</p>
+                                    )}
+                                </div>
+
+                            </div>
+                            {/* phân trang */}
+                            <div className="pagination d-flex justify-content-center my-4">
+                                    {/* Nút mũi tên trái */}
+                                <button
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    className="btn bg-white mx-1"
+                                    disabled={currentPage === 1}
+                                >
+                                    <i className="bi bi-chevron-left"></i>
+                                </button>
+
+                                {/* Nút số trang */}
+                                {Array.from({ length: totalPages }, (_, index) => (
+                                    <button
+                                    key={index}
+                                    onClick={() => handlePageChange(index + 1)}
+                                    className={`btn bg-white mx-1 ${currentPage === index + 1 ? 'btn-outline-danger text-danger' : 'text-black'}`}
+                                    >
+                                    {index + 1}
+                                    </button>
+                                ))}
+
+                                {/* Nút mũi tên phải */}
+                                <button
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    className="btn bg-white mx-1"
+                                    disabled={currentPage === totalPages}
+                                >
+                                    <i className="bi bi-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='col-3 content-product-right pe-0'>
+                        <facet-drawer data-collection="0">
+                            <div className="collection-filter bg-white pb-5 rounded-3">
+                                <div className="facet-inner overflow-auto bg-background  h-full px-2 z-10 relative ml-auto">
+                                    <form className="facet-form">
+                                        <div className="filter-container d-flex flex-column rounded-sm ps-4 pt-4 ">      
+                                            {/* Giá */}   
+                                            <aside className="aside-item filter-price py-2" style={{order: '4'}}>
+                                                <div className="aside-title">
+                                                <h2 className="title-head mt-0 fw-semibold mb-3 fs-6">
+                                                    Giá
+                                                </h2>
+                                                </div>
+                                                <div className="aside-content filter-group">
+                                                    <ul className="space-y-3 ps-0">
+                                                        <li className="filter-item filter-item--check-box link mb-1 d-flex align-items-center">
+                                                            <input 
+                                                                className="form-radio form-radio_md" 
+                                                                name="price_min" type="radio" id="filter-lower-1000000" 
+                                                                data-group="price" 
+                                                                data-field="price_min" 
+                                                                data-value="Giá dưới 1.000.000₫" 
+                                                                value="0:1000000" data-operator="OR" 
+                                                                onChange={onPriceChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-lower-1000000">
+                                                            Giá dưới 1.000.000₫
+                                                            </label>
+                                                        </li>                   
+                                                        <li className="filter-item filter-item--check-box link mb-1 d-flex align-items-center">
+                                                            <input 
+                                                                className="form-radio form-radio_md" 
+                                                                name="price_min" type="radio" 
+                                                                id="filter-1000000-2000000" 
+                                                                data-group="price" data-field="price_min" data-value="1.000.000₫ - 2.000.000₫" 
+                                                                value="1000000:2000000" 
+                                                                data-operator="OR"
+                                                                onChange={onPriceChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-1000000-2000000">
+                                                            1.000.000₫ - 2.000.000₫
+                                                            </label>
+                                                        </li>               
+                                                        <li className="filter-item filter-item--check-box link mb-1 d-flex align-items-center">
+                                                            <input 
+                                                                className="form-radio form-radio_md" name="price_min" type="radio" 
+                                                                id="filter-2000000-3000000" data-group="price" data-field="price_min" data-value="2.000.000₫ - 3.000.000₫" 
+                                                                value="2000000:3000000" data-operator="OR"
+                                                                onChange={onPriceChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-2000000-3000000">
+                                                            2.000.000₫ - 3.000.000₫
+                                                            </label>
+                                                        </li>                
+                                                        <li className="filter-item filter-item--check-box link mb-1 d-flex align-items-center">
+                                                            <input className="form-radio form-radio_md" name="price_min" type="radio" 
+                                                                id="filter-3000000-5000000" data-group="price" data-field="price_min" data-value="3.000.000₫ - 5.000.000₫" 
+                                                                value="3000000:5000000" data-operator="OR"
+                                                                onChange={onPriceChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-3000000-5000000">
+                                                            3.000.000₫ - 5.000.000₫
+                                                            </label>
+                                                        </li>                  
+                                                        <li className="filter-item filter-item--check-box link mb-1 d-flex align-items-center">
+                                                            <input className="form-radio form-radio_md" name="price_min" type="radio" 
+                                                                id="filter-5000000-7000000" data-group="price" data-field="price_min" data-value="5.000.000₫ - 7.000.000₫" 
+                                                                value="5000000:7000000" data-operator="OR"
+                                                                onChange={onPriceChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-5000000-7000000">
+                                                            5.000.000₫ - 7.000.000₫
+                                                            </label>
+                                                        </li>                    
+                                                        <li className="filter-item filter-item--check-box link mb-1 d-flex align-items-center">
+                                                            <input className="form-radio form-radio_md" name="price_min" type="radio" 
+                                                                id="filter-7000000-10000000" 
+                                                                data-group="price" data-field="price_min" data-value="7.000.000₫ - 10.000.000₫" 
+                                                                value="7000000:10000000" data-operator="OR"
+                                                                onChange={onPriceChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-7000000-10000000">
+                                                            7.000.000₫ - 10.000.000₫
+                                                            </label>
+                                                        </li>
+                                                        <li className="filter-item filter-item--check-box link mb-1 d-flex align-items-center">
+                                                            <input className="form-radio form-radio_md" name="price_min" type="radio" 
+                                                                id="filter-upper-10000000" data-group="price" data-field="price_min" data-value="Giá trên 10.000.000₫" 
+                                                                value="10000000:max" data-operator="OR"
+                                                                onChange={onPriceChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-upper-10000000">
+                                                            Giá trên 10.000.000₫
+                                                            </label>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </aside>
+                                            {/* Hãng sản xuất */}
+                                            <aside className="aside-item filter-vendor py-2" style={{order: '3'}}>
+                                                <div className="aside-title">
+                                                <h2 className="title-head mt-0 fw-semibold mb-3 fs-6">
+                                                    Hãng sản xuất
+                                                </h2>
+                                                </div>
+                                                <div className="aside-content filter-group">
+                                                    <ul className="space-y-3 ps-0">
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center ">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-vendor-minimart" data-group="PRODUCT_VENDOR" data-field="vendor.filter_key" data-value="Minimart" 
+                                                                value="Minimart" data-operator="OR" name="vendor"
+                                                                onChange={onBrandChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-vendor-minimart">
+                                                                Minimart
+                                                            </label>
+                                                        </li>
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center ">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-vendor-ega" data-group="PRODUCT_VENDOR" data-field="vendor.filter_key" data-value="EGA" 
+                                                                value="EGA" data-operator="OR" name="vendor"
+                                                                onChange={onBrandChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-vendor-ega">
+                                                                EGA
+                                                            </label>
+                                                        </li>
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center ">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-vendor-ega-green" data-group="PRODUCT_VENDOR" data-field="vendor.filter_key" data-value="EGA GREEN" 
+                                                                value="EGA GREEN" data-operator="OR" name="vendor"
+                                                                onChange={onBrandChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-vendor-ega-green">
+                                                                EGA GREEN
+                                                            </label>
+                                                        </li>
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center ">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-vendor-khac" data-group="PRODUCT_VENDOR" data-field="vendor.filter_key" data-value="Khác" 
+                                                                value="Khác" data-operator="OR" name="vendor"
+                                                                onChange={onBrandChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-vendor-khac">
+                                                                Khác
+                                                            </label>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </aside>
+                                            {/*Loại sản phẩm  */}
+                                            <aside className="aside-item filter-type py-2 " style={{order: '2'}}>
+                                                <div className="aside-title">
+                                                    <h2 className="title-head mt-0 fw-semibold mb-3 fs-6">
+                                                        Loại sản phẩm
+                                                    </h2>
+                                                </div>
+                                                <div className="aside-content filter-group">
+                                                    <ul className="space-y-3 ps-0">
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-type-lam-thom" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Làm thơm" 
+                                                                value="Làm thơm" data-operator="OR" name="type" 
+                                                                onChange={onTypeChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-type-lam-thom">
+                                                                Làm thơm
+                                                            </label>
+                                                        </li>
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-type-chat-tay-rua" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Chất tẩy rửa" 
+                                                                value="Chất tẩy rửa" data-operator="OR" name="type"
+                                                                onChange={onTypeChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-type-chat-tay-rua">
+                                                                Chất tẩy rửa
+                                                            </label>
+                                                        </li>
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-type-do-dung-hoc-tap" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Đồ dùng học tập" 
+                                                                value="Đồ dùng học tập" data-operator="OR" name="type"
+                                                                onChange={onTypeChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-type-do-dung-hoc-tap">
+                                                                Đồ dùng học tập
+                                                            </label>
+                                                        </li>
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-type-van-phong" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Văn phòng" 
+                                                                value="Văn phòng" data-operator="OR" name="type"
+                                                                onChange={onTypeChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-type-van-phong">
+                                                                Văn phòng
+                                                            </label>
+                                                        </li>
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-type-nhap-khau" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Nhập khẩu"
+                                                                value="Nhập khẩu" data-operator="OR" name="type"
+                                                                onChange={onTypeChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-type-nhap-khau">
+                                                                Nhập khẩu
+                                                            </label>
+                                                        </li>
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-type-nong-san-viet" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Nông sản Việt" 
+                                                                value="Nông sản Việt" data-operator="OR" name="type"
+                                                                onChange={onTypeChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-type-nong-san-viet">
+                                                                Nông sản Việt
+                                                            </label>
+                                                        </li>
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-type-nhiet-doi" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Nhiệt đới" 
+                                                                value="Nhiệt đới" data-operator="OR" name="type"
+                                                                onChange={onTypeChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-type-nhiet-doi">
+                                                                Nhiệt đới
+                                                            </label>
+                                                        </li>
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-type-thuc-pham-tuoi-song" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Thực phẩm tươi sống" 
+                                                                value="Thực phẩm tươi sống" data-operator="OR" name="type"
+                                                                onChange={onTypeChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-type-thuc-pham-tuoi-song">
+                                                                Thực phẩm tươi sống
+                                                            </label>
+                                                        </li>
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md"
+                                                                id="filter-type-thuc-pham" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Thực phẩm" 
+                                                                value="Thực phẩm" data-operator="OR" name="type"
+                                                                onChange={onTypeChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-type-thuc-pham">
+                                                                Thực phẩm
+                                                            </label>
+                                                        </li>
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-type-khac" data-group="PRODUCT_TYPE" data-field="type.filter_key" data-value="Khác" 
+                                                                value="Khác" data-operator="OR" name="type"
+                                                                
+                                                                onChange={onTypeChange}/>
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-type-khac">
+                                                                Khác
+                                                            </label>
+                                                        </li>  
+                                                        <li className="filter-item-toggle link text-secondary d-flex align-items-center ms-4 hover text-danger fw-bold">
+                                                            Xem thêm <i className="bi bi-chevron-down"></i>
+                                                        </li>
+                                                                
+                                                    </ul>
+                                                </div>
+                                            </aside>
+                                            {/* Màu sắc */}
+                                            <aside className="aside-item filter-tag1 py-2 " style={{order: '0'}}>
+                                                <div className="aside-title">
+                                                <h2 className="title-head mt-0 fw-semibold mb-3 fs-6">
+                                                    Màu sắc
+                                                </h2>
+                                                </div>
+                                                <div className="aside-content filter-group">
+                                                    <ul className="space-y-3 ps-0">
+                                                            <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                                <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                    id="filter-tag1-trang" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Trắng" value="Trắng" 
+                                                                    data-operator="OR" name="color" 
+                                                                    onChange={onColorChange}/>
+                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlFor="filter-tag1-trang">Trắng</label>
+                                                            </li>
+                                                            <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                                <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                    id="filter-tag1-den" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Đen" 
+                                                                    value="Đen" data-operator="OR" name="color"
+                                                                    onChange={onColorChange}/>
+                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlFor="filter-tag1-den">Đen</label>
+                                                            </li>
+                                                            <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                                <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                    id="filter-tag1-hong" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Hồng" 
+                                                                    value="Hồng" data-operator="OR" name="color"
+                                                                    onChange={onColorChange}/>
+                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlFor="filter-tag1-hong">Hồng</label>
+                                                            </li>
+                                                            <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                                <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                    id="filter-tag1-xam" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Xám"
+                                                                    value="Xám" data-operator="OR" name="color"
+                                                                    onChange={onColorChange}/>
+                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlFor="filter-tag1-xam">Xám</label>
+                                                            </li>
+                                                            <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                                <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                    id="filter-tag1-xanh" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Xanh" 
+                                                                    value="Xanh" data-operator="OR" name="color"
+                                                                    onChange={onColorChange}/>
+                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlFor="filter-tag1-xanh">Xanh</label>
+                                                            </li>
+                                                            <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                                <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                    id="filter-tag1-ghi" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Ghi" 
+                                                                    value="Ghi" data-operator="OR" name="color"
+                                                                    onChange={onColorChange}/>
+                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlFor="filter-tag1-ghi">Ghi</label>
+                                                            </li>
+                                                            <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                                <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                    id="filter-tag1-nau" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Nâu" 
+                                                                    value="Nâu" data-operator="OR" name="color"
+                                                                    onChange={onColorChange}/>
+                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlFor="filter-tag1-nau">Nâu</label>
+                                                            </li>
+
+                                                            <li className="filter-item-toggle link text-secondary d-flex align-items-center ms-4 hover text-danger fw-bold">
+                                                            Xem thêm <i className="bi bi-chevron-down"></i>
+                                                            </li>
+                                                                
+                                                    </ul>
+                                                </div>
+                                            </aside>
+                                            {/* Tag */}
+                                            <aside className="aside-item filter-tag1 py-2" style={{order: '1'}}>
+                                                <div className="aside-title">
+                                                <h2 className="title-head mt-0 fw-semibold mb-3 fs-6">
+                                                    Tags
+                                                </h2>
+                                                </div>
+                                                <div className="aside-content filter-group">
+                                                    <ul className="space-y-3 ps-0">    
+                                                        <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-tag1-flash-sale" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Flash Sale" 
+                                                                value="Flash Sale" data-operator="OR" name="tag"
+                                                                onChange={onTagChange}
+                                                            />
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-tag1-flash-sale">
+                                                                Flash Sale
+                                                            </label>
+                                                        </li>
+                                                        <li className="filter-item link filter-item--check-box ">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-tag1-giao-nhanh-24h" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Giao Nhanh 24h" 
+                                                                value="Giao Nhanh 24h" data-operator="OR" name="tag"
+                                                                onChange={onTagChange}
+                                                            />
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-tag1-giao-nhanh-24h">
+                                                                Giao Nhanh 24h
+                                                            </label>
+                                                        </li>  
+                                                        <li className="filter-item link filter-item--check-box ">
+                                                            <input type="checkbox" className="form-checkbox form-checkbox_md" 
+                                                                id="filter-tag1-rau-tuoi" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Rau Tươi" 
+                                                                value="Rau Tươi" data-operator="OR" name="tag"
+                                                                onChange={onTagChange}
+                                                            />
+                                                            <label className="custom-checkbox ms-2 fw-100" for="filter-tag1-rau-tuoi">
+                                                                Rau Tươi
+                                                            </label>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </aside>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </facet-drawer>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </div>
   );
 };

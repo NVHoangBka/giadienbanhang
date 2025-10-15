@@ -2,12 +2,46 @@
 
 body {
   margin: 0;
-  font-family: 'Times New Roman', Times, serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji" !important;
+  /* font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji"; */
+  font-family: 'Quicksand', sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+li {
+  list-style: none;
+}
+
+.form-checkbox_lg {
+  width: 20px;
+  height: 20px;
+}
+
+.form-checkbox_md, .form-radio_md {
+  width: 16px;
+  height: 16px;
+}
+
+.pagination button:focus,
+.pagination button:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+button:disabled {
+  border: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }

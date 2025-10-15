@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ProductModel from '../models/ProductModel';
 import ProductItem from './ProductItem';
+import { Link } from 'react-router-dom';
 
 const ProductTabSection = ({ title, addToCart }) => {
   const tabSets = {
@@ -40,9 +41,9 @@ const ProductTabSection = ({ title, addToCart }) => {
       <div className="container">
         <div className="heading-bar position-relative d-flex">
           <h2 className="w-auto mx-auto text-center position-relative z-2 bg-success-subtle d-inline px-3">
-            <a href="" className="text-decoration-none fs-1 fw-semibold text-success">
+            <Link to="#" className="text-decoration-none fs-1 fw-semibold text-success">
               {title}
-            </a>
+            </Link>
           </h2>
         </div>
         <div className="heading-tabs mx-5 mt-4 row justify-content-center">
@@ -60,19 +61,17 @@ const ProductTabSection = ({ title, addToCart }) => {
           <div className="product-list row bg-white py-3 justify-content-center m-0">
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product) => (
-                <ProductItem key={product.id} product={product} addToCart={addToCart} />
+                 <div className='col-2'>
+                    <ProductItem key={product.id} product={product} addToCart={addToCart} />
+                </div>
               ))
             ) : (
               <p className="text-center">Không có sản phẩm nào trong danh mục này.</p>
             )}
           </div>
-          <a
-            href=""
-            alt="Xem thêm"
-            className="bg-white w-100 d-flex mt-4 p-2 justify-content-center text-decoration-none text-success hover rounded-2"
-          >
+          <Link to="#" alt="Xem thêm"  className="bg-white w-100 d-flex mt-4 p-2 justify-content-center text-decoration-none text-success hover rounded-2" >
             Xem tất cả <i className="ms-1 bi bi-arrow-right"></i>
-          </a>
+          </Link>
         </div>
       </div>
     </div>
