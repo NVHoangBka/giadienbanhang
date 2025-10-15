@@ -1,8 +1,9 @@
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { Route, Navigate, Routes } from 'react-router-dom';
 import ProductCard from '../views/ProductCard';
 import ProductDetail from '../views/ProductDetail';
 import ProductModel from '../models/ProductModel';
+import Product from '../views/Product';
 
 const ProductRouter = ({ isAuthenticated, addToCart }) => {
   const ProtectedRoute = ({ children }) => {
@@ -10,19 +11,13 @@ const ProductRouter = ({ isAuthenticated, addToCart }) => {
   };
 
   return (
-    <>
+    <Routes>
       <Route  
         path="/all"
         element={
-          <ProtectedRoute>
-            <div className="row row-cols-1 row-cols-md-3 g-4">
-              {ProductModel.getAllProducts().map((product) => (
-                <div key={product.id} className="col">
-                  <ProductCard product={product} addToCart={addToCart} />
-                </div>
-              ))}
-            </div>
-          </ProtectedRoute>
+          // <ProtectedRoute>
+            <Product path='all'></Product>
+          // </ProtectedRoute>
         }
       />
       <Route
@@ -33,7 +28,7 @@ const ProductRouter = ({ isAuthenticated, addToCart }) => {
           </ProtectedRoute>
         }
       />
-    </>
+    </Routes>
   );
 };
 
