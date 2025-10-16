@@ -70,10 +70,10 @@ const Home = ({ addToCart }) => {
             </div>
           </div>
         </div>
-        <ProductTabSection title="Chăm sóc gia đình" addToCart={addToCart} />
-        <ProductTabSection title="Sản phẩm được quan tâm" addToCart={addToCart} />
-        <ProductTabSection title="Thực phẩm tươi sống" addToCart={addToCart} />
-        <ProductTabSection title="Văn phòng phẩm" addToCart={addToCart} />
+        <ProductTabSection path="cham-soc-gia-dinh" title="Chăm sóc gia đình" addToCart={addToCart} />
+        <ProductTabSection path="" title="Sản phẩm được quan tâm" addToCart={addToCart} />
+        <ProductTabSection path="thuc-pham-tuoi-song" title="Thực phẩm tươi sống" addToCart={addToCart} />
+        <ProductTabSection path="van-phong-pham" title="Văn phòng phẩm" addToCart={addToCart} />
       </div>
     </>
   );

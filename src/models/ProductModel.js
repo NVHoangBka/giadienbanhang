@@ -7,6 +7,9 @@ const products = [
     image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/image-116.jpg?v=1717487311197",
     description: "Nước lau sàn hiệu quả, ngăn côn trùng, an toàn cho gia đình.",
     types: ['nuoc-giat','hot'],
+    tag: ['flashsale'],
+    brands: ['Minimart'],
+    colors:['white','blue', 'black'],
     titles: ['cham-soc-gia-dinh'],
     falseSale: true
   },
@@ -219,6 +222,7 @@ const products = [
   }
 
 ];
+
 
 class ProductModel {
   // Lấy tất cả sản phẩm

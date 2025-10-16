@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import ProductModel from '../models/ProductModel';
+import TitleModel from '../models/TitleModel';
 import ProductItem from './ProductItem';
 import { Link } from 'react-router-dom';
 
-const ProductTabSection = ({ title, addToCart }) => {
+const ProductTabSection = ({path, title, addToCart }) => {
+  // Lấy tất cả titles từ TitleModel
+  // const titles = TitleModel.getTitlesByPath(path);
   const tabSets = {
     'Chăm sóc gia đình': [
       { label: 'Nước giặt quần áo', value: 'nuoc-giat' },

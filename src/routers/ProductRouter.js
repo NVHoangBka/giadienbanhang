@@ -13,17 +13,49 @@ const ProductRouter = ({ isAuthenticated, addToCart }) => {
       <Route  
         path="/all"
         element={
-          // <ProtectedRoute>
             <Product addToCart={addToCart} path='all'></Product>
-          // </ProtectedRoute>
+        }
+      />
+      <Route  
+        path="/cham-soc-gia-dinh"
+        element={
+            <Product addToCart={addToCart} path='cham-soc-gia-dinh'></Product>
+        }
+      />
+      <Route  
+        path="/do-dung-me-be"
+        element={
+            <Product addToCart={addToCart} path='do-dung-me-be'></Product>
         }
       />
       <Route  
         path="/thuc-pham-tuoi-song"
         element={
-          // <ProtectedRoute>
             <Product addToCart={addToCart} path='thuc-pham-tuoi-song'></Product>
-          // </ProtectedRoute>
+        }
+      />
+      <Route  
+        path="/thuc-pham-kho"
+        element={
+            <Product addToCart={addToCart} path='thuc-pham-kho'></Product>
+        }
+      />
+      <Route  
+        path="/do-dung-nha-bep"
+        element={
+            <Product addToCart={addToCart} path='do-dung-nha-bep'></Product>
+        }
+      />
+      <Route  
+        path="/sua-cac-loai"
+        element={
+            <Product addToCart={addToCart} path='sua-cac-loai'></Product>
+        }
+      />
+      <Route  
+        path="/van-phong-pham"
+        element={
+            <Product addToCart={addToCart} path='van-phong-pham'></Product>
         }
       />
       <Route
