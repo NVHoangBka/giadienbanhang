@@ -29,7 +29,9 @@ const Menu = ({ isOpen, menuRef, setIsMenuOpen }) => {
         <div className='menu-content'>
           <ul className="menu-list">
             <li>
-              <Link to="/products/all" onClick={handleItemClick} className='menu-hover'>Tất cả sản phẩm</Link>
+              <Link to="/products/all" onClick={handleItemClick} className='menu-hover'>
+                <span className='fw-medium'>Tất cả sản phẩm</span>
+              </Link>
             </li>
             {titles.map((title) => (
               <li key={title.id} className="dropdown-submenu">
@@ -37,22 +39,22 @@ const Menu = ({ isOpen, menuRef, setIsMenuOpen }) => {
                   to={`/products/${title.path}`}
                   className='d-flex justify-content-between menu-hover'
                   aria-haspopup="true"
-                  aria-expanded={title.subtitles.length > 0 ? 'false' : undefined}
+                  aria-expanded={title.subTitles.length > 0 ? 'false' : undefined}
                 >
-                  <span>{title.name}</span>
-                  {title.subtitles.length > 0 && (
+                  <span className='fw-medium'>{title.name}</span>
+                  {title.subTitles.length > 0 && (
                     <i className="bi bi-caret-right-fill d-flex align-items-center"></i>
                   )}
                 </Link>
-                {title.subtitles.length > 0 && (
+                {title.subTitles.length > 0 && (
                   <ul className="menu-list">
-                    {title.subtitles.map((subtitle, index) => (
+                    {title.subTitles.map((subTitle, index) => (
                       <li key={index} className='menu-hover'>
                         <Link
-                          to={`/products/${subtitle.value}`}
+                          to={`/products/${title.path}/${subTitle.value}`}
                           onClick={handleItemClick}
                         >
-                          {subtitle.name}
+                          {subTitle.name}
                         </Link>
                       </li>
                     ))}

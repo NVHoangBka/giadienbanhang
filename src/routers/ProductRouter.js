@@ -2,66 +2,35 @@ import React from 'react';
 import { Route, Navigate, Routes } from 'react-router-dom';
 import ProductDetail from '../views/ProductDetail';
 import Product from '../views/Product';
+import TitleModel from '../models/TitleModel';
 
 const ProductRouter = ({ isAuthenticated, addToCart }) => {
   const ProtectedRoute = ({ children }) => {
     return isAuthenticated ? children : <Navigate to="/login" />;
   };
 
+  // Lấy danh mục từ model mà không sửa đổi mảng gốc
+  const titles = [...TitleModel.getAllTitles()];
+
+  // Thêm route 'all' vào đầu danh sách
+  const paths = ['all', ...titles.map(t => t.path)];
+
   return (
-    <Routes>
-      <Route  
-        path="/all"
-        element={
-            <Product addToCart={addToCart} path='all'></Product>
-        }
-      />
-      <Route  
-        path="/cham-soc-gia-dinh"
-        element={
-            <Product addToCart={addToCart} path='cham-soc-gia-dinh'></Product>
-        }
-      />
-      <Route  
-        path="/do-dung-me-be"
-        element={
-            <Product addToCart={addToCart} path='do-dung-me-be'></Product>
-        }
-      />
-      <Route  
-        path="/thuc-pham-tuoi-song"
-        element={
-            <Product addToCart={addToCart} path='thuc-pham-tuoi-song'></Product>
-        }
-      />
-      <Route  
-        path="/thuc-pham-kho"
-        element={
-            <Product addToCart={addToCart} path='thuc-pham-kho'></Product>
-        }
-      />
-      <Route  
-        path="/do-dung-nha-bep"
-        element={
-            <Product addToCart={addToCart} path='do-dung-nha-bep'></Product>
-        }
-      />
-      <Route  
-        path="/sua-cac-loai"
-        element={
-            <Product addToCart={addToCart} path='sua-cac-loai'></Product>
-        }
-      />
-      <Route  
-        path="/van-phong-pham"
-        element={
-            <Product addToCart={addToCart} path='van-phong-pham'></Product>
-        }
-      />
+     <Routes>
+      {/* Tạo route động dựa trên danh sách paths */}
+      {paths.map((path) => (
+        <Route
+          key={path}
+          path={`/${path}/*`}
+          element={<Product addToCart={addToCart} path={path} />}
+        />
+      ))}
+
+      {/* Route chi tiết sản phẩm cần đăng nhập */}
       <Route
         path="/product/:id"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute isAuthenticated={isAuthenticated}>
             <ProductDetail addToCart={addToCart} />
           </ProtectedRoute>
         }

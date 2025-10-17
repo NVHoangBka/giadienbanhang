@@ -185,6 +185,7 @@ const products = [
     description: "VINAMIT-RAU DỀN HỮU CƠ 300G",
     types: [ 'but-viet'],
     titles: ['van-phong-pham'],
+    subTitles: ['but-viet'],
     falseSale: false
   },
   {
@@ -196,6 +197,7 @@ const products = [
     description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
     types: [ 'but-viet'],
     titles: ['van-phong-pham'],
+    subTitles: ['but-viet'],
     falseSale: false
   },
   {
@@ -251,6 +253,11 @@ class ProductModel {
   // Lấy sản phẩm theo title
   static getProductsByTitle(title) {
     return products.filter((product) => product.titles.includes(title));
+  }
+
+    // Lấy sản phẩm theo subTitle
+  static getProductsBySubTitle(subTitle) {
+    return products.filter((product) => product.subTitles.includes(subTitle));
   }
 
   // Tính tổng giá giỏ hàng

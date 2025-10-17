@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import ProductItem from './ProductItem';
 import ProductModel from '../models/ProductModel';
 import TitleModel from '../models/TitleModel';
 
 const Product = ({ path, addToCart }) => {
+    const params = useParams();
+    const fullPath = params['*'];
+    const [titlePath, subTitlePath] = fullPath ? fullPath.split('/') : [path, null];
+
 
     const [activeTab, setActiveTab] = useState(path|| null);
     const [title, setTitle] = useState();
@@ -21,15 +25,23 @@ const Product = ({ path, addToCart }) => {
 
     // Đặt activeTab dựa trên path
     useEffect(() => {
-        if (path !== 'all') {
-            setActiveTab(path);
-            setTitle(TitleModel.getTitlesByPath(path)[0]?.name);
+        if (titlePath !== 'all') {
+            // setActiveTab(path);
+            // setTitle(TitleModel.getTitlesByPath(path)[0]?.name);
+                setActiveTab(titlePath);
+
+            // Nếu có subcategory thì hiển thị song song
+            if (subTitlePath) {
+            setTitle(`${TitleModel.getTitlesByPath(titlePath)[0]?.name} / ${subTitlePath}`);
+            } else {
+            setTitle(TitleModel.getTitlesByPath(titlePath)[0]?.name);
+            }
         }
         else {
             setActiveTab('all');
             setTitle('Tất cả sản phẩm');
         }
-    }, [path]);
+    }, [titlePath, subTitlePath]);
 
     const resetAllFilters = () => {
         setFilters({
@@ -45,14 +57,6 @@ const Product = ({ path, addToCart }) => {
         });
     };
 
-      // Lấy danh sách sản phẩm ban đầu theo path
-    // useEffect(() => {
-    //     const allProducts =
-    //     activeTab === 'all'
-    //         ? ProductModel.getAllProducts()
-    //         : ProductModel.getProductsByTitle(activeTab);
-    //     setFilteredProducts(allProducts);
-    // }, [activeTab]);
 
     // Hàm thay đổi filter
     const handleFilterChange = (key, e) => {
@@ -109,6 +113,12 @@ const Product = ({ path, addToCart }) => {
         activeTab === 'all'
             ? ProductModel.getAllProducts()
             : ProductModel.getProductsByTitle(activeTab);
+
+        if (subTitlePath) {
+            products = products.filter((product) =>
+                product.subTitles?.includes(subTitlePath)
+            );
+        }
         // --- Lọc theo giá ---
         if (filters.price?.length > 0) {
             const priceValue = filters.price[0].value;
@@ -147,7 +157,7 @@ const Product = ({ path, addToCart }) => {
 
         setFilteredProducts(products);
         setCurrentPage(1);
-    }, [filters, activeTab, title]);
+    }, [filters, activeTab, title, subTitlePath]);
 
     // tính toán vị trí sản phẩm
     const indexOfLastProduct = currentPage * productsPerPage;
