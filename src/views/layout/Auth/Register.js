@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Register = ({ onLogin }) => {
+const Register = ({ onLogin, authController }) => {
   const [email, setEmail] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -12,93 +12,109 @@ const Register = ({ onLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const result = onLogin(email, password);
-    if (result.success) {
-      navigate('/');
+    if (authController) {
+      // Kiểm tra xem email đã tồn tại chưa (giả sử AuthService có phương thức kiểm tra)
+      const existingUser = authController.getCurrentUser();
+      if (!existingUser || existingUser.email !== email) {
+        const newUser = { email, password, firstName, lastName, phoneNumber };
+        // Giả sử AuthService có phương thức register (cần triển khai trong AuthService.js)
+        // authController.authService.register(newUser); // Thêm logic này nếu có
+        // Sau khi đăng ký thành công, đăng nhập ngay
+        const loginResult = authController.login(email, password);
+        if (loginResult.success) {
+          if (onLogin) onLogin(email, password); // Cập nhật trạng thái từ App.js
+          navigate('/');
+        } else {
+          setError(loginResult.message || 'Đăng ký không thành công.');
+        }
+      } else {
+        setError('Email đã tồn tại');
+      }
     } else {
-      setError(result.message);
+      setError('Lỗi hệ thống, vui lòng thử lại.');
     }
   };
 
   return (
-    <div className='bg-success-subtle '>
+    <div className='bg-success-subtle'>
       <div className="container">
-      <div className='row nav justify-content-start py-2 d-flex'>Trang chủ / Đăng Ký</div>
+        <div className='row nav justify-content-start py-2 d-flex'>Trang chủ / Đăng Ký</div>
         <div className="row justify-content-center py-4">
           <div className="col-md-6">
-            <div className="card px-4"><div className="login-card">
-              <div className='text-center my-3'>
-                <h1 className="fs-2 fw-semibold mb-2 mt-4 ">Đăng ký tài khoản</h1>
-                <p className="text-center fst-normal fs-6 mb-0">Bạn đã có tài khoản? 
-                  <a href="/account/login" className='fst-italic text-reset'> Đăng nhập tại đây</a>
-                </p>
-              </div>
+            <div className="card px-4">
+              <div className="login-card">
+                <div className='text-center my-3'>
+                  <h1 className="fs-2 fw-semibold mb-2 mt-4">Đăng ký tài khoản</h1>
+                  <p className="text-center fst-normal fs-6 mb-0">
+                    Bạn đã có tài khoản? 
+                    <a href="/account/login" className='fst-italic text-reset'> Đăng nhập tại đây</a>
+                  </p>
+                </div>
                 
                 {error && <div className="alert alert-danger">{error}</div>}
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3">
-                      <label htmlFor="lastName" className="form-label fs-6 opacity-75">Last Name *</label>
-                        <input
-                          type="text"
-                          className="form-control input-group-lg"
-                          id="lastName"
-                          value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}
-                          placeholder='Last Name'
-                          required
-                        />
+                    <label htmlFor="lastName" className="form-label fs-6 opacity-75">Last Name *</label>
+                    <input
+                      type="text"
+                      className="form-control input-group-lg"
+                      id="lastName"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      placeholder='Last Name'
+                      required
+                    />
                   </div>
                   <div className="mb-3">
-                      <label htmlFor="firstName" className="form-label fs-6 opacity-75">First Name *</label>
-                        <input
-                          type="text"
-                          className="form-control input-group-lg"
-                          id="firstName"
-                          value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)}
-                          placeholder='firstName'
-                          required
-                        />
+                    <label htmlFor="firstName" className="form-label fs-6 opacity-75">First Name *</label>
+                    <input
+                      type="text"
+                      className="form-control input-group-lg"
+                      id="firstName"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      placeholder='First Name'
+                      required
+                    />
                   </div>
                   <div className="mb-3">
-                      <label htmlFor="phoneNumber" className="form-label fs-6 opacity-75">Phone Number *</label>
-                        <input
-                          type="text"
-                          className="form-control input-group-lg"
-                          id="phoneNumber"
-                          value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value)}
-                          placeholder='Phone Number'
-                          required
-                        />
+                    <label htmlFor="phoneNumber" className="form-label fs-6 opacity-75">Phone Number *</label>
+                    <input
+                      type="text"
+                      className="form-control input-group-lg"
+                      id="phoneNumber"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      placeholder='Phone Number'
+                      required
+                    />
                   </div>
                   <div className="mb-3">
-                      <label htmlFor="email" className="form-label fs-6 opacity-75">Email *</label>
-                        <input
-                          type="text"
-                          className="form-control input-group-lg"
-                          id="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder='Email'
-                          required
-                        />
+                    <label htmlFor="email" className="form-label fs-6 opacity-75">Email *</label>
+                    <input
+                      type="text"
+                      className="form-control input-group-lg"
+                      id="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder='Email'
+                      required
+                    />
                   </div>
-                  
                   <div className="mb-3">
-                      <label htmlFor="password" className="form-label fs-6 opacity-75">Password *</label>
-                        <input
-                          type="password"
-                          className="form-control input-group-lg"
-                          id="password"
-                          value={password}
-                          placeholder='Password'
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
-                        />
+                    <label htmlFor="password" className="form-label fs-6 opacity-75">Password *</label>
+                    <input
+                      type="password"
+                      className="form-control input-group-lg"
+                      id="password"
+                      value={password}
+                      placeholder='Password'
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
                   </div>
                   <div className='text-center mb-3 py-3'>
-                      <button type="submit" className=" btn btn-lg w-50 bg-success text-white fw-semibold fs-6 rounded-pill ">Đăng Ký</button>
+                    <button type="submit" className="btn btn-lg w-50 bg-success text-white fw-semibold fs-6 rounded-pill">Đăng Ký</button>
                   </div>
                 </form>
 
@@ -119,7 +135,6 @@ const Register = ({ onLogin }) => {
         </div>
       </div>
     </div>
-    
   );
 };
 

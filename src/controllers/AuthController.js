@@ -1,30 +1,30 @@
-import UserModel from '../models/UserModel';
+import AuthService from '../services/AuthService.js';
 
 class AuthController {
-  // Đăng nhập
-  login(username, password) {
-    const user = UserModel.authenticate(username, password);
+  constructor() {
+    this.authService = AuthService;
+  }
+
+  login(email, password) {
+    const user = this.authService.login(email, password);
     if (user) {
-      UserModel.setCurrentUser(user);
+      this.authService.setCurrentUser(user);
       return { success: true, user };
     }
     return { success: false, message: 'Tên đăng nhập hoặc mật khẩu không đúng' };
   }
 
-  // Đăng xuất
   logout() {
-    UserModel.clearCurrentUser();
+    this.authService.logout();
   }
 
-  // Kiểm tra trạng thái đăng nhập
   isAuthenticated() {
-    return !!UserModel.getCurrentUser();
+    return this.authService.isAuthenticated();
   }
 
-  // Lấy thông tin người dùng hiện tại
   getCurrentUser() {
-    return UserModel.getCurrentUser();
+    return this.authService.getCurrentUser();
   }
 }
 
-export default AuthController;
+export default new AuthController();

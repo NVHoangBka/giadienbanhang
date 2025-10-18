@@ -1,49 +1,100 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './views/components/Header';
 import CartController from './controllers/CartController';
 import Footer from './views/components/Footer';
-import AppRouter from './routers';
-import ToastMessage from "./views/components/ToastMessage";
+import AppRouter from './routers/AppRouter';
+import ToastMessage from './views/components/ToastMessage';
+import AuthController from './controllers/AuthController'; // Import instance
 
-  const cartController = new CartController();
-  
 const App = () => {
+  const cartController = CartController;
+  const authController = AuthController; // Sử dụng instance
   const [cartItems, setCartItems] = useState(cartController.getCartItems());
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("info");
+  const [isAuthenticated, setIsAuthenticated] = useState(authController.isAuthenticated());
 
+  useEffect(() => {
+    setIsAuthenticated(authController.isAuthenticated());
+    const storedCart = cartController.getCartItems();
+    if (storedCart.length > 0 && JSON.stringify(storedCart) !== JSON.stringify(cartItems)) {
+      setCartItems(storedCart);
+    }
+  }, [authController, cartController]);
 
   const addToCart = (product) => {
-    const updatedCart = cartController.addToCart(product);
+    try {
+      const updatedCart = cartController.addToCart(product);
+      setCartItems([...updatedCart]);
+      setToastMessage(`Đã thêm "${product.name}" vào giỏ hàng`);
+      setToastType("success");
+      setShowToast(true);
+    } catch (error) {
+      setToastMessage(error.message);
+      setToastType("danger");
+      setShowToast(true);
+    }
+  };
+
+  const removeFromCart = (productId) => {
+    try {
+      const updatedCart = cartController.removeFromCart(productId);
+      setCartItems([...updatedCart]);
+    } catch (error) {
+      setToastMessage(error.message);
+      setToastType("danger");
+      setShowToast(true);
+    }
+  };
+
+  const onLogin = (email, password) => {
+    const result = authController.login(email, password);
+    if (result.success) {
+      setIsAuthenticated(true);
+      setToastMessage(`Đăng nhập thành công với ${email}`);
+      setToastType("success");
+      setShowToast(true);
+      return true;
+    } else {
+      setToastMessage(result.message);
+      setToastType("danger");
+      setShowToast(true);
+      return false;
+    }
+  };
+
+  const onLogout = () => {
+    authController.logout();
+    setIsAuthenticated(false);
+  };
+
+  const onCartChange = (updatedCart) => {
     setCartItems([...updatedCart]);
-    setToastMessage(`Đã thêm "${product.name}" vào giỏ hàng`);
-    setToastType("success");
-    setShowToast(true);
   };
-
-  const removeFromCart = (index) => {
-    const updatedCart = cartController.removeFromCart(index);
-    setCartItems(updatedCart);
-  };
-
-  
 
   return (
     <Router>
-      <Header cartController={cartController}/>
+      <Header 
+        cartController={cartController} 
+        isAuthenticated={isAuthenticated} 
+        onLogout={onLogout}
+        cartItems={cartItems}
+        onCartChange={onCartChange}
+      />
       <div className="">
         <AppRouter
-          addToCart={addToCart}
+          isAuthenticated={isAuthenticated}
           cartItems={cartItems}
+          addToCart={addToCart}
           removeFromCart={removeFromCart}
+          onLogin={onLogin}
+          onCartChange={onCartChange}
         />
       </div>
-      <Footer/>
-
+      <Footer />
       <div className="toast-container position-fixed bottom-0 top-0 end-0">
-        {/* Toast hiển thị ở góc màn hình */}
         <ToastMessage
           show={showToast}
           message={toastMessage}

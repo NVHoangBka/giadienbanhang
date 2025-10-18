@@ -1,16 +1,32 @@
-import React from 'react';
-import ProductModel from '../models/ProductModel';
+import React, { useEffect, useState } from 'react';
 import Slider from './components/Slider';
 import ProductItem from './ProductItem';
 import ProductTabSection from './ProductTabSection';
-import BannerModel from '../models/BannerModel';
-import TitleModel from '../models/TitleModel';
 import { Link } from 'react-router-dom';
+import ProductController from '../controllers/ProductController';
+import BannerController from '../controllers/BannerController';
+import TitleController from '../controllers/TitleController';
 
 const Home = ({ addToCart }) => {
-  const flashSaleProducts = ProductModel.getProductsByFlashSale('flashsale');
-  const bannerHome = BannerModel.getAllBanners();
-  const TitlesHome = TitleModel.getTitlesByType('h1')
+  const [flashSaleProducts, setFlashSaleProducts] = useState([]);
+  const [bannerHome, setBannerHome] = useState([]);
+  const [titlesHome, setTitlesHome] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const flashSale = await ProductController.getProductsByFlashSale('flashsale');
+        const banners = await BannerController.getAllBanners();
+        const titles = await TitleController.getTitlesByType('h1');
+        setFlashSaleProducts(flashSale);
+        setBannerHome(banners);
+        setTitlesHome(titles);
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu:', error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -26,7 +42,7 @@ const Home = ({ addToCart }) => {
                   className="w-100 rounded-4"
                 />
               </div>
-            )) }
+            ))}
           </div>
           <div className="section-flashsale mt-5 bg-danger rounded-4 pb-3">
             <h2 className="text-white ps-3 py-4 m-0">
@@ -35,9 +51,9 @@ const Home = ({ addToCart }) => {
             <div className="product-flashsale-list row px-1 m-0 justify-content-center">
               {flashSaleProducts.length > 0 ? (
                 flashSaleProducts.map((product) => (
-                  <div className='col-2'>
+                  <div className="col-2">
                     <ProductItem key={product.id} product={product} addToCart={addToCart} />
-                    </div>
+                  </div>
                 ))
               ) : (
                 <p className="text-center text-white">Không có sản phẩm flash sale.</p>
@@ -53,7 +69,7 @@ const Home = ({ addToCart }) => {
           />
           <div className="container">
             <div className="collection-list row py-5 position-relative fs-6">
-              {TitlesHome.map((title,index) => (
+              {titlesHome.map((title, index) => (
                 <Link
                   key={index}
                   to="#"

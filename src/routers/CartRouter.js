@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Navigate } from 'react-router-dom';
 import Cart from '../views/Cart';
+import CartController from '../controllers/CartController';
 
 const CartRouter = ({ isAuthenticated, cartItems, removeFromCart }) => {
   const ProtectedRoute = ({ children }) => {
@@ -12,11 +13,15 @@ const CartRouter = ({ isAuthenticated, cartItems, removeFromCart }) => {
       path="/cart"
       element={
         <ProtectedRoute>
-          <Cart cartItems={cartItems} removeFromCart={removeFromCart} />
+          <Cart 
+            cartItems={cartItems} 
+            removeFromCart={removeFromCart} 
+            cartController={CartController} 
+          />
         </ProtectedRoute>
       }
     />
   );
 };
 
-export default CartRouter;  
+export default CartRouter;

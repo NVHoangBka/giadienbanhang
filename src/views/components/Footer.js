@@ -14,15 +14,15 @@ const Footer = () => {
                 HUNGNHUNG supermarket
               </p>
             </div>
-            <p className="footer-desciption m-0 pb-2  fs-body">
+            <p className="footer-desciption m-0 pb-2 fs-body">
               Thương hiệu siêu thị uy tín và chất lượng, cam kết mang đến những
               trải nghiệm mua sắm tiện lợi, hiện đại và phong phú
             </p>
-            <p className="m-0 pb-2  fs-body fw-bold">TaxCode: 12345678999</p>
+            <p className="m-0 pb-2 fs-body fw-bold">TaxCode: 12345678999</p>
             <div className="footer-address row align-items-center">
               <i className="bi bi-geo-alt fs-6 col-1"></i>
               <p className="col m-0 ps-1">
-                <span className="d-block ">Địa chỉ</span>
+                <span className="d-block">Địa chỉ</span>
                 <span className="fw-bold fs-body">
                   10 Lu Gia, District 11, Ho Chi Minh City
                 </span>
@@ -35,7 +35,7 @@ const Footer = () => {
                     <i className="bi bi-telephone fs-6"></i>
                   </div>
                   <p className="col m-0">
-                    <span className="d-block ">Holline</span>
+                    <span className="d-block">Holline</span>
                     <span className="fw-bold fs-body">19008088</span>
                   </p>
                 </div>
@@ -46,7 +46,7 @@ const Footer = () => {
                     <i className="bi bi-envelope fs-6"></i>
                   </div>
                   <p className="col m-0">
-                    <span className="d-block ">Email</span>
+                    <span className="d-block">Email</span>
                     <span className="fw-bold fs-body">
                       Hoangdo.bka@gmail.com
                     </span>
@@ -64,7 +64,6 @@ const Footer = () => {
               <li className="mb-2 hover">Chương trình cộng tác viên</li>
             </ul>
           </div>
-
           <div className="col p-0">
             <div className="footer-policy row p-0 m-0">
               <p className="footer-title fw-bolder mt-1 p-0">Chính sách</p>
@@ -75,7 +74,7 @@ const Footer = () => {
                 <li className="mb-2 hover">Điều khoản dịch vụ</li>
               </ul>
             </div>
-            <div className="footer-support  row p-0 m-0">
+            <div className="footer-support row p-0 m-0">
               <p className="footer-title fw-bolder mt-1 p-0">Tổng đài hỗ trợ</p>
               <ul className="fs-body">
                 <li className="mb-2 hover">Gọi mua hàng: 19006750 (8h-20h)</li>
@@ -95,6 +94,6 @@ const Footer = () => {
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;

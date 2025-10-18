@@ -1,4 +1,5 @@
 import React from 'react';
+import ProductController from '../controllers/ProductController';
 
 const ProductItem = ({ product, addToCart }) => {
   if (!product) {
@@ -23,9 +24,6 @@ const ProductItem = ({ product, addToCart }) => {
     return stars;
   };
 
-
-
-
   return (
     <div className="product-item w-100 p-3 border mx-2 bg-white h-100 rounded-4">
       <img
@@ -37,7 +35,7 @@ const ProductItem = ({ product, addToCart }) => {
       <div className="more d-flex justify-content-between mx-1">
         <div className="price">
           <p className="price-current m-0 text-danger fw-bold">
-            {formatPrice(product.discountPrice || product.price)}
+            {formatPrice(product.displayPrice)}
           </p>
           {product.discountPrice && (
             <p className="price-old text-decoration-line-through m-0">

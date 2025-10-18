@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ProductItem from './ProductItem';
-import ProductModel from '../models/ProductModel';
-import TitleModel from '../models/TitleModel';
+import ProductController from '../controllers/ProductController';
+import TitleController from '../controllers/TitleController';
 
-const Product = ({ path, addToCart }) => {
-    const params = useParams();
+    const Product = ({ path, addToCart }) => {
+        const params = useParams();
     const fullPath = params['*'];
     const [titlePath, subTitlePath] = fullPath ? fullPath.split('/') : [path, null];
-
+    const [titlePathCover, setTitlePathConver] = useState();
 
     const [activeTab, setActiveTab] = useState(path|| null);
     const [title, setTitle] = useState();
@@ -26,20 +26,23 @@ const Product = ({ path, addToCart }) => {
     // Đặt activeTab dựa trên path
     useEffect(() => {
         if (titlePath !== 'all') {
-            // setActiveTab(path);
-            // setTitle(TitleModel.getTitlesByPath(path)[0]?.name);
                 setActiveTab(titlePath);
-
+                const title = TitleController.getTitlesByPath(titlePath)[0]?.name;
             // Nếu có subcategory thì hiển thị song song
             if (subTitlePath) {
-            setTitle(`${TitleModel.getTitlesByPath(titlePath)[0]?.name} / ${subTitlePath}`);
+                const subTitle = TitleController.getSubTitlesByPath(titlePath, subTitlePath)?.name;
+                setTitlePathConver(`${title} / ${subTitle}`);
+                setTitle(subTitle);
             } else {
-            setTitle(TitleModel.getTitlesByPath(titlePath)[0]?.name);
+                console.log(title)
+                setTitlePathConver(title);
+                setTitle(title);
             }
         }
         else {
             setActiveTab('all');
             setTitle('Tất cả sản phẩm');
+            setTitlePathConver('Tất cả sản phẩm');
         }
     }, [titlePath, subTitlePath]);
 
@@ -111,8 +114,8 @@ const Product = ({ path, addToCart }) => {
     useEffect(() => {
         let products =
         activeTab === 'all'
-            ? ProductModel.getAllProducts()
-            : ProductModel.getProductsByTitle(activeTab);
+            ? ProductController.getAllProducts()
+            : ProductController.getProductsByTitle(activeTab);
 
         if (subTitlePath) {
             products = products.filter((product) =>
@@ -123,7 +126,6 @@ const Product = ({ path, addToCart }) => {
         if (filters.price?.length > 0) {
             const priceValue = filters.price[0].value;
             const [min, max] = priceValue.split(':').map(Number);
-            
             products = products.filter((p) =>
                 (p.price >= min && (max ? p.price <= max : true)) ||
                 (p.discountPrice >= min && (max ? p.discountPrice <= max : true))
@@ -187,13 +189,13 @@ const Product = ({ path, addToCart }) => {
                         <span className="mx-1 md:mx-2 inline-block">&nbsp;/&nbsp;</span>
                     </li>
                     <li>
-                        <span style={{ color: '#BFBFBF' }}>{title}</span>
+                        <span style={{ color: '#BFBFBF' }}>{titlePathCover}</span>
                     </li>          
                 </ul>
             </div>
             <section className="section section-collection-banner">
                 <div className="collection_banner mb-5 md:mb-5  container text-center px-0">
-                    <Link className="banner" to="/collections/all" title="Tất cả sản phẩm">
+                    <Link className="banner" to="#" title="Tất cả sản phẩm">
                         <picture>
                             <source media="(max-width: 767px)" srcset="//bizweb.dktcdn.net/thumb/large/100/518/448/themes/953339/assets/collection_main_banner.jpg?1758526220617"/>
                             <img className="object-contain mx-auto" src="https://bizweb.dktcdn.net/100/518/448/themes/953339/assets/collection_main_banner.jpg?1758526220617" width="1432" height="120" alt="Tất cả sản phẩm" style={{height: 'auto', width: '100%'}}/>
@@ -568,42 +570,42 @@ const Product = ({ path, addToCart }) => {
                                                                     id="filter-tag1-trang" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Trắng" value="white" 
                                                                     data-operator="OR" name="color" 
                                                                     onChange={onColorChange}/>
-                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlhtmlFor="filter-tag1-trang">Trắng</label>
+                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlFor="filter-tag1-trang">Trắng</label>
                                                             </li>
                                                             <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
                                                                 <input type="checkbox" className="form-checkbox form-checkbox_md" 
                                                                     id="filter-tag1-den" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Đen" 
                                                                     value="black" data-operator="OR" name="color"
                                                                     onChange={onColorChange}/>
-                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlhtmlFor="filter-tag1-den">Đen</label>
+                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlFor="filter-tag1-den">Đen</label>
                                                             </li>
                                                             <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
                                                                 <input type="checkbox" className="form-checkbox form-checkbox_md" 
                                                                     id="filter-tag1-hong" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Hồng" 
                                                                     value="pink" data-operator="OR" name="color"
                                                                     onChange={onColorChange}/>
-                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlhtmlFor="filter-tag1-hong">Hồng</label>
+                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlFor="filter-tag1-hong">Hồng</label>
                                                             </li>
                                                             <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
                                                                 <input type="checkbox" className="form-checkbox form-checkbox_md" 
                                                                     id="filter-tag1-xam" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Xám"
                                                                     value="gray" data-operator="OR" name="color"
                                                                     onChange={onColorChange}/>
-                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlhtmlFor="filter-tag1-xam">Xám</label>
+                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlFor="filter-tag1-xam">Xám</label>
                                                             </li>
                                                             <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
                                                                 <input type="checkbox" className="form-checkbox form-checkbox_md" 
                                                                     id="filter-tag1-xanh" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Xanh" 
                                                                     value="blue" data-operator="OR" name="color"
                                                                     onChange={onColorChange}/>
-                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlhtmlFor="filter-tag1-xanh">Xanh</label>
+                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlFor="filter-tag1-xanh">Xanh</label>
                                                             </li>
                                                             <li className="filter-item link filter-item--check-box mb-1 d-flex align-items-center">
                                                                 <input type="checkbox" className="form-checkbox form-checkbox_md" 
                                                                     id="filter-tag1-nau" data-group="PRODUCT_TAG" data-field="tag.key" data-value="Nâu" 
                                                                     value="brown" data-operator="OR" name="color"
                                                                     onChange={onColorChange}/>
-                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlhtmlFor="filter-tag1-nau">Nâu</label>
+                                                                <label className="custom-checkbox cursor-pointer flex gap-2 items-center ms-2 fw-100" htmlFor="filter-tag1-nau">Nâu</label>
                                                             </li>
 
                                                             <li className="filter-item-toggle link text-secondary d-flex align-items-center ms-4 hover text-danger fw-bold">

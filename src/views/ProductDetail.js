@@ -1,10 +1,10 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import ProductModel from '../models/ProductModel';
+import ProductController from '../controllers/ProductController';
 
 const ProductDetail = ({ addToCart }) => {
   const { id } = useParams();
-  const product = ProductModel.getProductById(id);
+  const product = ProductController.getProductById(id);
 
   if (!product) {
     return <div className="container mt-4"><h2>Sản phẩm không tồn tại</h2></div>;

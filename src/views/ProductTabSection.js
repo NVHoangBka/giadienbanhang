@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import ProductModel from '../models/ProductModel';
-import TitleModel from '../models/TitleModel';
+import React, { useEffect, useState } from 'react';
+import ProductController from '../controllers/ProductController';
 import ProductItem from './ProductItem';
 import { Link } from 'react-router-dom';
 
@@ -30,14 +29,29 @@ const ProductTabSection = ({path, title, addToCart }) => {
   };
 
   const tabs = tabSets[title] || [];
-
   const [activeTab, setActiveTab] = useState(tabs[0]?.value || null);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
-  const filteredProducts = activeTab === 'sap-thom'
-    ? ProductModel.getAllProducts().filter(product => 
-        product.types.includes('sap-thom') || product.types.includes('xit-phong')
-      ).slice(0, 5)
-    : ProductModel.getProductsByType(activeTab).slice(0, 5);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        let products;
+        if (activeTab === 'sap-thom') {
+          const allProducts = await ProductController.getAllProducts();
+          products = allProducts.filter(product => 
+            product.types.includes('sap-thom') || product.types.includes('xit-phong')
+          ).slice(0, 5);
+        } else {
+          products = await ProductController.getProductsByType(activeTab);
+          products = products.slice(0, 5);
+        }
+        setFilteredProducts(products);
+      } catch (error) {
+        console.error('Lỗi khi lấy sản phẩm:', error);
+      }
+    };
+    fetchProducts();
+  }, [activeTab]);
 
   return (
     <div className="section-product-tabs mt-5">

@@ -14,7 +14,7 @@ const ToastMessage = ({
 
   useEffect(() => {
     if (show && toastRef.current) {
-      const toast = new Toast(toastRef.current,{ delay: 2000 });
+      const toast = new Toast(toastRef.current, { delay: 2000 });
       toast.show();
 
       const handleHidden = () => {
