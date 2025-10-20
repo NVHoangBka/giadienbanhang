@@ -5,6 +5,15 @@ class AuthController {
     this.authService = AuthService;
   }
 
+  register(newUser) {
+    const result = this.authService.register(newUser);
+    if (result.success) {
+      // Tự động đặt người dùng hiện tại sau khi đăng ký thành công
+      this.authService.setCurrentUser(result.user);
+    }
+    return result;
+  }
+
   login(email, password) {
     const user = this.authService.login(email, password);
     if (user) {

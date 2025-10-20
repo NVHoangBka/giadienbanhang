@@ -1,11 +1,7 @@
-import { users } from '../data/users.js';
+// Không nhập mảng users tĩnh nữa; AuthService xử lý dữ liệu động
 
 class UserModel {
   static currentUser = null;
-
-  static authenticate(email, password) {
-    return users.find(user => user.email === email && user.password === password) || null;
-  }
 
   static setCurrentUser(user) {
     this.currentUser = user;

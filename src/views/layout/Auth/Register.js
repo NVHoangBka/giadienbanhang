@@ -12,23 +12,18 @@ const Register = ({ onLogin, authController }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError(''); // Xóa lỗi trước đó
     if (authController) {
-      // Kiểm tra xem email đã tồn tại chưa (giả sử AuthService có phương thức kiểm tra)
-      const existingUser = authController.getCurrentUser();
-      if (!existingUser || existingUser.email !== email) {
-        const newUser = { email, password, firstName, lastName, phoneNumber };
-        // Giả sử AuthService có phương thức register (cần triển khai trong AuthService.js)
-        // authController.authService.register(newUser); // Thêm logic này nếu có
-        // Sau khi đăng ký thành công, đăng nhập ngay
-        const loginResult = authController.login(email, password);
-        if (loginResult.success) {
-          if (onLogin) onLogin(email, password); // Cập nhật trạng thái từ App.js
-          navigate('/');
-        } else {
-          setError(loginResult.message || 'Đăng ký không thành công.');
+      const newUser = { email, password, firstName, lastName, phoneNumber };
+      const registerResult = authController.register(newUser);
+      if (registerResult.success) {
+        // Tự động đăng nhập sau khi đăng ký thành công
+        if (onLogin) {
+          onLogin(email, password); // Cập nhật trạng thái từ App.js
         }
+        navigate('/');
       } else {
-        setError('Email đã tồn tại');
+        setError(registerResult.message || 'Đăng ký không thành công.');
       }
     } else {
       setError('Lỗi hệ thống, vui lòng thử lại.');
@@ -54,38 +49,38 @@ const Register = ({ onLogin, authController }) => {
                 {error && <div className="alert alert-danger">{error}</div>}
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3">
-                    <label htmlFor="lastName" className="form-label fs-6 opacity-75">Last Name *</label>
+                    <label htmlFor="lastName" className="form-label fs-6 opacity-75">Họ *</label>
                     <input
                       type="text"
                       className="form-control input-group-lg"
                       id="lastName"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      placeholder='Last Name'
+                      placeholder='Họ'
                       required
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="firstName" className="form-label fs-6 opacity-75">First Name *</label>
+                    <label htmlFor="firstName" className="form-label fs-6 opacity-75">Tên *</label>
                     <input
                       type="text"
                       className="form-control input-group-lg"
                       id="firstName"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      placeholder='First Name'
+                      placeholder='Tên'
                       required
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="phoneNumber" className="form-label fs-6 opacity-75">Phone Number *</label>
+                    <label htmlFor="phoneNumber" className="form-label fs-6 opacity-75">Số điện thoại *</label>
                     <input
                       type="text"
                       className="form-control input-group-lg"
                       id="phoneNumber"
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
-                      placeholder='Phone Number'
+                      placeholder='Số điện thoại'
                       required
                     />
                   </div>
@@ -102,13 +97,13 @@ const Register = ({ onLogin, authController }) => {
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="password" className="form-label fs-6 opacity-75">Password *</label>
+                    <label htmlFor="password" className="form-label fs-6 opacity-75">Mật khẩu *</label>
                     <input
                       type="password"
                       className="form-control input-group-lg"
                       id="password"
                       value={password}
-                      placeholder='Password'
+                      placeholder='Mật khẩu'
                       onChange={(e) => setPassword(e.target.value)}
                       required
                     />

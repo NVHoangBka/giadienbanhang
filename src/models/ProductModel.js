@@ -38,6 +38,18 @@ export class ProductModel {
       product.subTitles.includes(subTitlePath)
     );
   }
+
+  getProductsByTag(tag) {
+    return this.products.filter(product => 
+      product.tag.includes(tag)
+    );
+  }
+
+  getProductsByType(type) {
+    return this.products.filter(product => 
+      product.types.includes(type)
+    );
+  }
 }
 
 export default new ProductModel(); // Xuất instance

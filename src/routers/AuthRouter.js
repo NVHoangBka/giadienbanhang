@@ -13,7 +13,7 @@ const AuthRouter = ({ isAuthenticated, onLogin }) => {
       />
       <Route 
         path="/register" 
-        element={<Register authController={AuthController} />} 
+        element={<Register onLogin={onLogin} authController={AuthController} />} 
       />
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>

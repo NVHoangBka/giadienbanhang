@@ -16,6 +16,14 @@ class ProductService {
   getProductsBySubTitle(subTitlePath) {
     return this.productModel.getProductsBySubTitle(subTitlePath);
   }
+  getProductsByTag(tag) {
+    return this.productModel.getProductsByTag(tag)
+  }
+
+  getProductsByType(type) {
+    return this.productModel.getProductsByType(type)
+  }
+
 
   // Thêm các phương thức khác nếu cần, ví dụ:
   filterProducts(criteria) {

@@ -86,7 +86,11 @@ const ProductTabSection = ({path, title, addToCart }) => {
               <p className="text-center">Không có sản phẩm nào trong danh mục này.</p>
             )}
           </div>
-          <Link to="#" alt="Xem thêm"  className="bg-white w-100 d-flex mt-4 p-2 justify-content-center text-decoration-none text-success hover rounded-2" >
+          <Link 
+            to={`/products/${path}`}
+            alt="Xem thêm"  
+            className="bg-white w-100 d-flex mt-4 p-2 justify-content-center text-decoration-none text-success hover rounded-2" 
+          >
             Xem tất cả <i className="ms-1 bi bi-arrow-right"></i>
           </Link>
         </div>

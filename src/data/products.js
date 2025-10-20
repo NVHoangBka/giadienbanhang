@@ -11,8 +11,7 @@ export const products = [
     brands: ['Minimart'],
     colors:['white','blue', 'black'],
     titles: ['cham-soc-gia-dinh'],
-    subTitles: ['chat-tay-rua'],
-    falseSale: true
+    subTitles: ['chat-tay-rua']
   },
   {
     id: 2,
@@ -22,9 +21,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/medium/100/518/448/products/image-112.jpg?v=1717486673863",
     description: "Nước rửa chén thân thiện với môi trường, dịu nhẹ cho da tay.",
     types: ['nuoc-giat','hot'],
+    tag: ['flashsale'],
     titles: ['cham-soc-gia-dinh'],
-    subTitles: ['chat-tay-rua'],
-    falseSale: true
+    subTitles: ['chat-tay-rua']
   },
   {
     id: 3,
@@ -34,9 +33,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/frame-106.jpg?v=1717485532697",
     description: "Nước xả vải Downy hương hoa Oải Hương nước Pháp",
     types: ['nuoc-giat', 'nuoc-lau-nha','hot', 'san-deal'],
+    tag: ['flashsale'],
     titles: ['cham-soc-gia-dinh'],
-    subTitles: ['sap-thom'],
-    falseSale: true
+    subTitles: ['sap-thom']
   },
   {
     id: 4,
@@ -46,9 +45,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/medium/100/518/448/products/frame-101.jpg?v=1717476291620",
     description: "Túi Nước Xả Vải Comfort Thiên Nhiên Thanh Khiết - Túi 1.7L",
     types: ['nuoc-giat', 'nuoc-lau-nha','hot'],
+    tag: ['flashsale'],
     titles: ['cham-soc-gia-dinh'],
-    subTitles: ['sap-thom'],
-    falseSale: true
+    subTitles: ['sap-thom']
   },
   {
     id: 5,
@@ -58,9 +57,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/medium/100/518/448/products/frame-102-1.jpg?v=1717475952480",
     description: "Nước Giặt Comfort Dưỡng Vải Đa Năng Thiên Nhiên Thanh Khiết 3.0KG",
     types: ['nuoc-giat', 'nuoc-lau-nha','hot','san-deal'],
+    tag: ['flashsale'],
     titles: ['cham-soc-gia-dinh'],
-    subTitles: ['sap-thom'],
-    falseSale: true
+    subTitles: ['sap-thom']
   },
   {
     id: 6,
@@ -69,9 +68,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/grande/100/518/448/products/frame-110.jpg?v=1717486138593",
     description: "Tẩy cặn canxi, tẩy kính, vòi sen, bồn sứ, chậu tắm, gạch men, gương soi Hikit 500 ml",
     types: ['nuoc-giat', 'nuoc-lau-nha','san-deal'],
+    tag: ['flashsale'],
     titles: ['cham-soc-gia-dinh'],
-    subTitles: ['chat-tay-rua'],
-    falseSale: false
+    subTitles: ['chat-tay-rua']
   },
   {
     id: 7,
@@ -80,9 +79,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/medium/100/518/448/products/frame-102-1.jpg?v=1717475952480",
     description: "Khăn giấy ướt tiện lợi, giá siêu tiết kiệm.",
     types: ['nuoc-lau-nha', 'sap-thom','san-deal'],
+    tag: ['flashsale'],
     titles: ['cham-soc-gia-dinh'],
-    subTitles: ['chat-tay-rua'],
-    falseSale: false
+    subTitles: ['chat-tay-rua']
   },
   {
     id: 8,
@@ -92,9 +91,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/image-119.jpg?v=1717487812197",
     description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
     types: [ 'nuoc-lau-nha','xit-phong','san-deal'],
+    tag: ['flashsale'],
     titles: ['cham-soc-gia-dinh'],
-    subTitles: ['sap-thom'],
-    falseSale: false
+    subTitles: ['sap-thom']
   },
   {
     id: 9,
@@ -104,9 +103,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/grande/100/518/448/products/upload-e9fa2f43255248b6a348296051b1f4d3.jpg?v=1717407836197",
     description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
     types: [ 'rau-cu'],
+    tag: ['flashsale'],
     titles: ['thuc-pham-tuoi-song'],
-    subTitles: ['rau-cu'],
-    falseSale: false
+    subTitles: ['rau-cu']
   },
   {
     id: 10,
@@ -116,9 +115,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/upload-ac8b79ef7a3c4a08aa419a4bf072daa1.jpg?v=1717407834123",
     description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
     types: [ 'rau-cu'],
+    tag: ['flashsale'],
     titles: ['thuc-pham-tuoi-song'],
-    subTitles: ['rau-cu'],
-    falseSale: false
+    subTitles: ['rau-cu']
   },
   {
     id: 11,
@@ -128,9 +127,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/upload-46c2e35320494016b667d5d67c80f7fd.jpg?v=1717407832690",
     description: "VINAMIT-RAU DỀN HỮU CƠ 300G",
     types: [ 'rau-cu'],
+    tag: ['flashsale'],
     titles: ['thuc-pham-tuoi-song'],
-    subTitles: ['rau-cu'],
-    falseSale: false
+    subTitles: ['rau-cu']
   },
   {
     id: 12,
@@ -140,9 +139,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/grande/100/518/448/products/upload-30312511bb204a3d9aa344e21a70a52b.jpg?v=1717407831063",
     description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
     types: [ 'rau-cu'],
+    tag: ['flashsale'],
     titles: ['thuc-pham-tuoi-song'],
-    subTitles: ['rau-cu'],
-    falseSale: false
+    subTitles: ['rau-cu']
   },
   {
     id: 13,
@@ -152,9 +151,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/grande/100/518/448/products/upload-8922cfd99be640d89ba6ceaf0006180c.jpg?v=1717407827807",
     description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
     types: [ 'rau-cu'],
+    tag: ['flashsale'],
     titles: ['thuc-pham-tuoi-song'],
-    subTitles: ['thuy-hai-san'],
-    falseSale: false
+    subTitles: ['thuy-hai-san']
   },
   {
     id: 14,
@@ -164,9 +163,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/grande/100/518/448/products/upload-92ddc58356804b73b775fa81fee2fe40.jpg?v=1717407825213",
     description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
     types: [ 'rau-cu'],
+    tag: ['flashsale'],
     titles: ['thuc-pham-tuoi-song'],
-    subTitles: ['thit'],
-    falseSale: false
+    subTitles: ['thit']
   },
   {
     id: 15,
@@ -176,9 +175,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/frame-92.jpg?v=1717474945973",
     description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
     types: [ 'but-viet'],
+    tag: ['flashsale'],
     titles: ['van-phong-pham'],
-    subTitles: ['but-viet'],
-    falseSale: false
+    subTitles: ['but-viet']
   },
   {
     id: 16,
@@ -188,9 +187,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/frame-88.jpg?v=1717474686750",
     description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
     types: [ 'but-viet'],
+    tag: ['flashsale'],
     titles: ['van-phong-pham'],
-    subTitles: ['but-viet'],
-    falseSale: false
+    subTitles: ['but-viet']
   },
   {
     id: 17,
@@ -200,9 +199,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/frame-84.jpg?v=1717474250750",
     description: "VINAMIT-RAU DỀN HỮU CƠ 300G",
     types: [ 'but-viet'],
+    tag: ['flashsale'],
     titles: ['van-phong-pham'],
-    subTitles: ['but-viet'],
-    falseSale: false
+    subTitles: ['but-viet']
   },
   {
     id: 18,
@@ -212,9 +211,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/grande/100/518/448/products/frame-79.jpg?v=1717473953247",
     description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
     types: [ 'but-viet'],
+    tag: ['flashsale'],
     titles: ['van-phong-pham'],
-    subTitles: ['but-viet'],
-    falseSale: false
+    subTitles: ['but-viet']
   },
   {
     id: 19,
@@ -224,9 +223,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/large/100/518/448/products/frame-76.jpg?v=1717473523093",
     description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
     types: ['but-viet'],
+    tag: ['flashsale'],
     titles: ['van-phong-pham'],
-    subTitles: ['but-viet'],
-    falseSale: false
+    subTitles: ['but-viet']
   },
   {
     id: 20,
@@ -236,9 +235,9 @@ export const products = [
     image: "https://bizweb.dktcdn.net/thumb/grande/100/518/448/products/image-70.jpg?v=1717473122453",
     description: "Nước rửa chén giá sốc, sạch bóng chén đĩa.",
     types: ['but-viet'],
+    tag: ['flashsale'],
     titles: ['van-phong-pham'],
-    subTitles: ['but-viet'],
-    falseSale: false
+    subTitles: ['but-viet']
   }
 
 ];

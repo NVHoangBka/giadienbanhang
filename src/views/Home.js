@@ -15,7 +15,7 @@ const Home = ({ addToCart }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const flashSale = await ProductController.getProductsByFlashSale('flashsale');
+        const flashSale = await ProductController.getProductsByTag('flashsale');
         const banners = await BannerController.getAllBanners();
         const titles = await TitleController.getTitlesByType('h1');
         setFlashSaleProducts(flashSale);
@@ -50,7 +50,7 @@ const Home = ({ addToCart }) => {
             </h2>
             <div className="product-flashsale-list row px-1 m-0 justify-content-center">
               {flashSaleProducts.length > 0 ? (
-                flashSaleProducts.map((product) => (
+                flashSaleProducts.slice(0, 6).map((product) => (
                   <div className="col-2">
                     <ProductItem key={product.id} product={product} addToCart={addToCart} />
                   </div>

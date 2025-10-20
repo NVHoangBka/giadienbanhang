@@ -16,6 +16,15 @@ class ProductController {
   getProductsBySubTitle(subTitlePath) {
     return this.productService.getProductsBySubTitle(subTitlePath);
   }
+
+  getProductsByTag(tag) {
+    return this.productService.getProductsByTag(tag)
+  }
+
+  getProductsByType(type) {
+    return this.productService.getProductsByType(type)
+    
+  }
 }
 
-export default new ProductController(); // Xuất instance
+export default new ProductController();

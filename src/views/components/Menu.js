@@ -13,7 +13,9 @@ const Menu = ({ isOpen, menuRef, setIsMenuOpen }) => {
     <nav ref={menuRef} className={`menu ${isOpen ? 'active' : ''}`}>
       <div className='menu-container'>
         <div className='menu-header d-flex justify-content-between py-3 px-4 align-items-center'>
-          <Link className='header-icon-group text-reset d-flex text-decoration-none py-1 px-2 menu-hover'>
+          <Link 
+            to={'/account/login'}
+            className='header-icon-group text-reset d-flex text-decoration-none py-1 px-2 menu-hover'>
             <div className='header-icon align-content-center me-2'>
               <i className="bi bi-person fs-3 border px-1"></i>
             </div>

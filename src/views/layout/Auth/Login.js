@@ -10,7 +10,7 @@ const Login = ({ onLogin, authController }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (onLogin) {
-      const result = onLogin(email, password); // Gọi onLogin từ props
+      const result = onLogin(email, password);
       if (result.success) {
         navigate('/');
       } else {

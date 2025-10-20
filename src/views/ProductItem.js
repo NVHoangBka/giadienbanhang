@@ -35,7 +35,7 @@ const ProductItem = ({ product, addToCart }) => {
       <div className="more d-flex justify-content-between mx-1">
         <div className="price">
           <p className="price-current m-0 text-danger fw-bold">
-            {formatPrice(product.displayPrice)}
+            {formatPrice(product.discountPrice || product.price)}
           </p>
           {product.discountPrice && (
             <p className="price-old text-decoration-line-through m-0">

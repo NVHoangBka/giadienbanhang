@@ -53,14 +53,9 @@ const App = () => {
     const result = authController.login(email, password);
     if (result.success) {
       setIsAuthenticated(true);
-      setToastMessage(`Đăng nhập thành công với ${email}`);
-      setToastType("success");
-      setShowToast(true);
       return true;
     } else {
-      setToastMessage(result.message);
-      setToastType("danger");
-      setShowToast(true);
+      setIsAuthenticated(false);
       return false;
     }
   };
