@@ -9,9 +9,11 @@ const Login = ({ onLogin, authController }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError(''); // Xóa lỗi trước đó
     if (onLogin) {
-      const result = onLogin(email, password);
+      const result = authController.login(email, password); 
       if (result.success) {
+        onLogin(email, password); // Cập nhật trạng thái App.js
         navigate('/');
       } else {
         setError(result.message || 'Tên đăng nhập hoặc mật khẩu không đúng.');
@@ -52,13 +54,13 @@ const Login = ({ onLogin, authController }) => {
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="password" className="form-label fs-6 opacity-75">Password *</label>
+                    <label htmlFor="password" className="form-label fs-6 opacity-75">Mật khẩu *</label>
                     <input
                       type="password"
                       className="form-control input-group-lg"
                       id="password"
                       value={password}
-                      placeholder='Password'
+                      placeholder='Mật khẩu'
                       onChange={(e) => setPassword(e.target.value)}
                       required
                     />

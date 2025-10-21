@@ -1,4 +1,3 @@
-// Không nhập mảng users tĩnh nữa; AuthService xử lý dữ liệu động
 
 class UserModel {
   static currentUser = null;

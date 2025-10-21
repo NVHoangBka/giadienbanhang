@@ -17,7 +17,7 @@ code {
 
 a {
   text-decoration: none;
-  color: inherit;
+  color: inherit !important;
 }
 li {
   list-style: none;
@@ -47,4 +47,30 @@ button:disabled {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.text-decoration-none {
+  text-decoration: none;
+}
+
+.hover:hover {
+  color: rgb(255, 123, 0) !important;
+  opacity: 0.8;
+  cursor: pointer;
+}
+.active {
+  color: white !important;
+  background-color: red !important;
+}
+
+.text-active {
+  color: rgb(255, 94, 0) !important;
+}
+
+.fs-7 {
+  font-size: 14px !important;
+}
+
+.fs-8 {
+  font-size: 12px !important;
 }

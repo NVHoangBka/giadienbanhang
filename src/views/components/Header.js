@@ -11,7 +11,14 @@ const Header = ({ cartController, isAuthenticated, onLogout, cartItems, onCartCh
   const user = authController.getCurrentUser();
 
   const handleClickHome = () => navigate('/');
-  const handleClickLogin = () => navigate('/account/login');
+  const handleClickLogin = () => {
+    if (isAuthenticated) {
+      navigate('/account')
+    } else {
+
+      navigate('/account/login')
+    } 
+  };
   const handleClickLogout = () => {
     authController.logout();
     onLogout();
@@ -53,7 +60,7 @@ const Header = ({ cartController, isAuthenticated, onLogout, cartItems, onCartCh
           <div className="header-top-center text-center" onClick={handleClickHome} style={{ background: 'transparent' }}>
             <img src="https://www.canva.com/design/DAGwwkhPGJ4/TrjwaRAGmJSgLHZRKbYLGg/view" alt="logo" className="header-logo h-75 w-50" />
           </div>
-          <div className="header-top-right">
+          <div className="header-top-right d-flex">
             <button className="btn btn-outline-secondary border rounded-circle m-3" onClick={toggleSearch}>
               <i className="bi bi-search fs-5"></i>
             </button>
@@ -61,21 +68,9 @@ const Header = ({ cartController, isAuthenticated, onLogout, cartItems, onCartCh
             {isSearchOpen && (
               <div className="modal-backdrop fade show" onClick={() => setIsSearchOpen(false)}></div>
             )}
-            {isAuthenticated ? (
-              <div className="dropdown">
-                <button className="btn btn-outline-secondary border rounded-circle m-3 dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i className="bi bi-person fs-5"></i>
-                </button>
-                <ul className="dropdown-menu" aria-labelledby="userDropdown">
-                  <li><span className="dropdown-item-text">{user?.firstName}</span></li>
-                  <li><button className="dropdown-item" onClick={handleClickLogout}>Đăng xuất</button></li>
-                </ul>
-              </div>
-            ) : (
-              <button className="btn btn-outline-secondary border rounded-circle m-3" onClick={handleClickLogin}>
-                <i className="bi bi-person fs-5"></i>
-              </button>
-            )}
+            <button className="btn btn-outline-secondary border rounded-circle m-3" onClick={handleClickLogin}>
+              <i className="bi bi-person fs-5"></i>
+            </button>
             <button className="btn btn-outline-secondary border m-3 position-relative" onClick={toggleCart}>
               <i className="bi bi-cart4 fs-5"></i>
               <span className="ms-1">Giỏ hàng</span>

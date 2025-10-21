@@ -8,7 +8,6 @@ class AuthController {
   register(newUser) {
     const result = this.authService.register(newUser);
     if (result.success) {
-      // Tự động đặt người dùng hiện tại sau khi đăng ký thành công
       this.authService.setCurrentUser(result.user);
     }
     return result;
@@ -17,8 +16,7 @@ class AuthController {
   login(email, password) {
     const user = this.authService.login(email, password);
     if (user) {
-      this.authService.setCurrentUser(user);
-      return { success: true, user };
+      return { success: true, user, message: 'Đăng nhập thành công'};
     }
     return { success: false, message: 'Tên đăng nhập hoặc mật khẩu không đúng' };
   }
@@ -30,7 +28,6 @@ class AuthController {
   isAuthenticated() {
     return this.authService.isAuthenticated();
   }
-
   getCurrentUser() {
     return this.authService.getCurrentUser();
   }

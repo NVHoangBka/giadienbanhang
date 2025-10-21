@@ -1,3 +1,3 @@
 export const users = [
-  { id: 1, email: 'user@example.com', password: 'password123', firstName: 'John', lastName: 'Doe', phoneNumber: '123456789' },
+  { id: 1, email: 'hoangdo.bka@gmail.com', password: '123456', firstName: 'John', lastName: 'Doe', phoneNumber: '123456789' },
 ];

@@ -8,12 +8,6 @@
   -moz-appearance: textfield; /* Firefox */
 }
 
-
-.hover:hover {
-  color: orange !important;
-  opacity: 0.8;
-  cursor: pointer;
-}
 .active {
   color: white !important;
   background-color: red !important;

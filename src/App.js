@@ -9,7 +9,7 @@ import AuthController from './controllers/AuthController'; // Import instance
 
 const App = () => {
   const cartController = CartController;
-  const authController = AuthController; // Sử dụng instance
+  const authController = AuthController;
   const [cartItems, setCartItems] = useState(cartController.getCartItems());
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
