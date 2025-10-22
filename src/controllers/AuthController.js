@@ -5,31 +5,24 @@ class AuthController {
     this.authService = AuthService;
   }
 
-  register(newUser) {
-    const result = this.authService.register(newUser);
-    if (result.success) {
-      this.authService.setCurrentUser(result.user);
-    }
-    return result;
+  async register(newUser) {
+    return await this.authService.register(newUser);
   }
 
-  login(email, password) {
-    const user = this.authService.login(email, password);
-    if (user) {
-      return { success: true, user, message: 'Đăng nhập thành công'};
-    }
-    return { success: false, message: 'Tên đăng nhập hoặc mật khẩu không đúng' };
+  async login(email, password) {
+    return await this.authService.login(email, password);
   }
 
-  logout() {
-    this.authService.logout();
+  async logout() {
+    await this.authService.logout();
   }
 
   isAuthenticated() {
     return this.authService.isAuthenticated();
   }
-  getCurrentUser() {
-    return this.authService.getCurrentUser();
+
+  async getCurrentUser() {
+    return await this.authService.getCurrentUser();
   }
 }
 

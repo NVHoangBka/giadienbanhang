@@ -1,45 +1,78 @@
 import UserModel from '../models/UserModel.js';
-import { users as initialUsers } from '../data/users.js';
 
 class AuthService {
   constructor() {
-    // Tải người dùng từ localStorage, nếu không có thì dùng dữ liệu ban đầu
-    this.users = JSON.parse(localStorage.getItem('users')) || initialUsers;
     this.userModel = UserModel;
+    // Khôi phục người dùng từ token khi khởi tạo
+    this.getCurrentUser();
   }
 
-  register(newUser) {
-    // Kiểm tra email trùng lặp
-    if (this.users.some(user => user.email === newUser.email)) {
-      return { success: false, message: 'Email đã tồn tại' };
+  async register(newUser) {
+    try {
+      const response = await fetch('http://localhost:5000/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newUser)
+      });
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      return { success: false, message: 'Lỗi hệ thống, vui lòng thử lại.' };
     }
-    // Tạo ID mới
-    newUser.id = this.users.length > 0 ? Math.max(...this.users.map(u => u.id)) + 1 : 1;
-    this.users.push(newUser);
-    localStorage.setItem('users', JSON.stringify(this.users)); // Lưu vào localStorage
-    return { success: true, user: newUser };
   }
 
-  login(email, password) {
-    // Tìm người dùng với email và mật khẩu khớp
-    const user = this.users.find(user => user.email === email && user.password === password);
-    if (user) {
-      this.userModel.setCurrentUser(user); // Lưu người dùng hiện tại
-      return user;
+  async login(email, password) {
+    try {
+      const response = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const result = await response.json();
+      if (result.success) {
+        localStorage.setItem('token', result.token); // Lưu token
+        this.userModel.setCurrentUser(result.user); // Lưu thông tin người dùng
+      }
+      return result;
+    } catch (error) {
+      return { success: false, message: 'Lỗi hệ thống, vui lòng thử lại.' };
     }
-    return null; // Trả về null nếu không tìm thấy
   }
 
-  logout() {
+  async logout() {
+    localStorage.removeItem('token');
     this.userModel.clearCurrentUser();
+    await fetch('http://localhost:5000/api/logout', {
+      method: 'POST'
+    });
   }
 
   isAuthenticated() {
     return !!this.userModel.getCurrentUser();
   }
 
-  getCurrentUser() {
-    return this.userModel.getCurrentUser();
+  async getCurrentUser() {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+
+    try {
+      const response = await fetch('http://localhost:5000/api/user', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const result = await response.json();
+      if (result.success) {
+        this.userModel.setCurrentUser(result.user);
+        return result.user;
+      } else {
+        localStorage.removeItem('token');
+        this.userModel.clearCurrentUser();
+        return null;
+      }
+    } catch (error) {
+      localStorage.removeItem('token');
+      this.userModel.clearCurrentUser();
+      return null;
+    }
   }
 
   setCurrentUser(user) {

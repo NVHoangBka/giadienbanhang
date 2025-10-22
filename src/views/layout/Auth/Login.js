@@ -7,13 +7,15 @@ const Login = ({ onLogin, authController }) => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Xóa lỗi trước đó
-    if (onLogin) {
-      const result = authController.login(email, password); 
+    setError('');
+    console.log('Thử đăng nhập với:', { email, password });
+    if (authController && onLogin) {
+      const result = await authController.login(email, password);
+      console.log('Kết quả đăng nhập:', result);
       if (result.success) {
-        onLogin(email, password); // Cập nhật trạng thái App.js
+        onLogin(email, password);
         navigate('/');
       } else {
         setError(result.message || 'Tên đăng nhập hoặc mật khẩu không đúng.');

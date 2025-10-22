@@ -10,18 +10,21 @@ const Register = ({ onLogin, authController }) => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Xóa lỗi trước đó
+    setError('');
     if (authController) {
       const newUser = { email, password, firstName, lastName, phoneNumber };
-      const registerResult = authController.register(newUser);
+      const registerResult = await authController.register(newUser);
       if (registerResult.success) {
-        // Tự động đăng nhập sau khi đăng ký thành công
-        if (onLogin) {
-          onLogin(email, password); // Cập nhật trạng thái từ App.js
+        // Tự động đăng nhập sau khi đăng ký
+        const loginResult = await authController.login(email, password);
+        if (loginResult.success) {
+          onLogin(email, password);
+          navigate('/');
+        } else {
+          setError('Đăng ký thành công nhưng đăng nhập thất bại. Vui lòng đăng nhập thủ công.');
         }
-        navigate('/');
       } else {
         setError(registerResult.message || 'Đăng ký không thành công.');
       }
@@ -87,7 +90,7 @@ const Register = ({ onLogin, authController }) => {
                   <div className="mb-3">
                     <label htmlFor="email" className="form-label fs-6 opacity-75">Email *</label>
                     <input
-                      type="text"
+                      type="email"
                       className="form-control input-group-lg"
                       id="email"
                       value={email}
