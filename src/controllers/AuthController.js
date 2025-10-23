@@ -16,7 +16,7 @@ class AuthController {
   async logout() {
     await this.authService.logout();
   }
-
+  
   isAuthenticated() {
     return this.authService.isAuthenticated();
   }

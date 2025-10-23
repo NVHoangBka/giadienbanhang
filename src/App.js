@@ -27,7 +27,7 @@ const App = () => {
       }
     }
     checkAuth();
-  }, [authController, cartController]);
+  }, [cartItems]);
 
   const addToCart = (product) => {
     try {
@@ -56,7 +56,6 @@ const App = () => {
 
   const onLogin = async (email, password) => {
     const result = await authController.login(email, password);
-    console.log('onLogin result:', result);
     if (result.success) {
       setIsAuthenticated(true);
       return true;

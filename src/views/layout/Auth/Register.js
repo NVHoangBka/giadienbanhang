@@ -1,35 +1,77 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = ({ onLogin, authController }) => {
   const [email, setEmail] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [firstName, setFirstName] = useState('');
+  const [address, setAddress] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+
+  const validateForm = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^.{8,}$/;
+
+    if (!emailRegex.test(email)) {
+      setError('Email không hợp lệ');
+      return false;
+    }
+    if (!passwordRegex.test(password)) {
+      setError('Mật khẩu phải có ít nhất 8 ký tự');
+      return false;
+    }
+    if (password !== confirmPassword) {
+      setError('Mật khẩu xác nhận không khớp');
+      return false;
+    }
+    if (!firstName || !lastName) {
+      setError('Họ và tên không được để trống');
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
     setError('');
-    if (authController) {
-      const newUser = { email, password, firstName, lastName, phoneNumber };
+    setLoading(true);
+    try {
+      if (!authController) {
+        setError('Lỗi hệ thống: authController không tồn tại.');
+        setLoading(false);
+        return;
+      }
+      const newUser = { email, password, firstName, lastName, phoneNumber, address };
       const registerResult = await authController.register(newUser);
       if (registerResult.success) {
-        // Tự động đăng nhập sau khi đăng ký
         const loginResult = await authController.login(email, password);
-        if (loginResult.success) {
+        if (loginResult.success && onLogin) {
           onLogin(email, password);
           navigate('/');
         } else {
-          setError('Đăng ký thành công nhưng đăng nhập thất bại. Vui lòng đăng nhập thủ công.');
+          setError(
+            <>
+              Đăng ký thành công nhưng đăng nhập thất bại.{' '}
+              <a href="/account/login" className="text-primary">Đăng nhập thủ công</a>.
+            </>
+          );
         }
       } else {
-        setError(registerResult.message || 'Đăng ký không thành công.');
+        const message = registerResult.message || 'Đăng ký không thành công.';
+        setError(message === 'Email đã tồn tại' ? 'Email đã được sử dụng.' : message);
       }
-    } else {
+    } catch (error) {
+      console.error('Register error:', error);
       setError('Lỗi hệ thống, vui lòng thử lại.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,7 +87,7 @@ const Register = ({ onLogin, authController }) => {
                   <h1 className="fs-2 fw-semibold mb-2 mt-4">Đăng ký tài khoản</h1>
                   <p className="text-center fst-normal fs-6 mb-0">
                     Bạn đã có tài khoản? 
-                    <a href="/account/login" className='fst-italic text-reset'> Đăng nhập tại đây</a>
+                    <Link to="/account/login" className='fst-italic text-reset'> Đăng nhập tại đây</Link>
                   </p>
                 </div>
                 
@@ -111,8 +153,37 @@ const Register = ({ onLogin, authController }) => {
                       required
                     />
                   </div>
+                  <div className="mb-3">
+                    <label htmlFor="confirmPassword" className="form-label fs-6 opacity-75">
+                      Xác nhận mật khẩu *
+                    </label>
+                    <input
+                      type="password"
+                      className="form-control input-group-lg"
+                      id="confirmPassword"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Xác nhận mật khẩu"
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="address" className="form-label fs-6 opacity-75">Địa chỉ</label>
+                    <input
+                      type="text"
+                      className="form-control input-group-lg"
+                      id="address"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      placeholder='Địa chỉ'
+                      required
+                    />
+                  </div>
                   <div className='text-center mb-3 py-3'>
-                    <button type="submit" className="btn btn-lg w-50 bg-success text-white fw-semibold fs-6 rounded-pill">Đăng Ký</button>
+                    <button 
+                      type="submit" 
+                      className="btn btn-lg w-50 bg-success text-white fw-semibold fs-6 rounded-pill"
+                      disabled={loading}>{loading ? 'Đang xử lý...' : 'Đăng Ký'}</button>
                   </div>
                 </form>
 

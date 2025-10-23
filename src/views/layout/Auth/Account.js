@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 
 const Account = ({ onLogin, authController }) => {
   const navigate = useNavigate();
@@ -31,6 +31,7 @@ const Account = ({ onLogin, authController }) => {
     return null;
   }
 
+
   return (
     <div className='bg-success-subtle'>
       <div className="breadcrumbs">
@@ -51,43 +52,59 @@ const Account = ({ onLogin, authController }) => {
       <section className="section section-main-account">
         <div className="container">
           <div>
-            <div className="row">
-              <div className="col-3">
+            <div className="row pb-5">
+              <div className="col-2 border-end border-secondary-subtle">
                 <div className="block-account lg:border-r border-neutral-100">
                   <h5 className="title-account font-semibold fs-4" style={{ color: 'var(--color-secondary)' }}>
                     Trang tài khoản
                   </h5>
-                  <p>
+                  <p >
                     Xin chào,{' '}
                     <span className="fw-semibold">
                       {currentUser.firstName} {currentUser.lastName}
                     </span>
                     !
                   </p>
-                  <ul className="space-y-3 mt-5 list-disc pl-4">
-                    <li>
-                      <Link className="title-info link font-semibold text-secondary" to="/account">
+                  <ul className="space-y-3 mt-2 list-disc pl-4">
+                    <li className='mt-2'>
+                      <NavLink 
+                        className={({ isActive }) =>
+                          `title-info link fw-semibold text-decoration-none fs-7 ${isActive ? 'text-active' : 'text-black text-hover'}`
+                        } 
+                        to="/account">
                         Thông tin tài khoản
-                      </Link>
+                      </NavLink>
                     </li>
-                    <li>
-                      <Link className="title-info link font-semibold" to="/account/orders">
+                    <li className='mt-2'>
+                      <NavLink 
+                        className={({ isActive }) =>
+                          `title-info link fw-semibold text-decoration-none fs-7 ${isActive ? 'text-active' : 'text-black text-hover'}`
+                        } 
+                        to="/account/orders">
                         Đơn hàng của bạn
-                      </Link>
+                      </NavLink>
                     </li>
-                    <li>
-                      <Link className="title-info link font-semibold" to="/account/changepassword">
+                    <li className='mt-2'>
+                      <NavLink 
+                        className={({ isActive }) =>
+                          `title-info link fw-semibold text-decoration-none fs-7 ${isActive ? 'text-active' : 'text-black text-hover'}`
+                        } 
+                        to="/account/changepassword">
                         Đổi mật khẩu
-                      </Link>
+                      </NavLink>
                     </li>
-                    <li>
-                      <Link className="title-info link font-semibold" to="/account/addresses">
+                    <li className='mt-2'>
+                      <NavLink 
+                        className={({ isActive }) =>
+                          `title-info link fw-semibold text-decoration-none fs-7 ${isActive ? 'text-active' : 'text-black text-hover'}`
+                        } 
+                        to="/account/addresses">
                         Sổ địa chỉ (0)
-                      </Link>
+                      </NavLink>
                     </li>
-                    <li>
+                    <li className='mt-2'>
                       <button
-                        className="title-info link font-semibold text-error"
+                        className="title-info link fw-semibold text-danger fs-7 text-hover"
                         onClick={handleLogout}
                         style={{ background: 'none', border: 'none', padding: 0 }}
                       >
@@ -97,7 +114,7 @@ const Account = ({ onLogin, authController }) => {
                   </ul>
                 </div>
               </div>
-              <div className="col-9 bg-background rounded-lg px-3 py-4 mb-6">
+              <div className="col-8 bg-white rounded-4 px-3 py-4 mb-6 ms-3">
                 <h1 className="text-h4 font-semibold mb-2">Thông tin tài khoản</h1>
                 <div className="form-signup name-account m992 space-y-2">
                   <p>

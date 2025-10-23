@@ -1,22 +1,23 @@
 const express = require('express');
-const cors = require('cors');
-const connectDB = require('./config/db');
 require('dotenv').config();
+const connectDB = require('./config/db');
+const authRoutes = require('./routes/Auth');
+const cors = require('cors');
 
 const app = express();
 
 // Kết nối MongoDB
 connectDB();
 
-app.use(cors({
-  origin: 'http://localhost:3000',
-  methods: ['GET', 'POST'],
-  credentials: true
-}));
+// Middleware
+app.use(cors());
 app.use(express.json());
 
-const authRoutes = require('./routes/Auth');
+// Routes
 app.use('/api', authRoutes);
 
+// Khởi động server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server chạy trên cổng ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server chạy trên cổng ${PORT}`);
+});
