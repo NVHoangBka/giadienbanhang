@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Route, Routes, useNavigate } from 'react-router-dom';
+import AuthController from '../../../../controllers/AuthController';
+import OrderController from '../../../../controllers/OrderController';
+import AccountInfo from './AccountInfo';
+import OrderList from './OrderList';
+import ChangePassword from './ChangePassword';
+import AddressList from './AddressList';
+
 
 const Account = ({ onLogin, authController }) => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [logoutLoading, setLogoutLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [addressCount, setAddressCount] = useState(0);
 
   useEffect(() => {
     async function fetchUser() {
@@ -14,17 +24,26 @@ const Account = ({ onLogin, authController }) => {
       if (!user) {
         navigate('/account/login');
       }
+      const addressResult = await OrderController.getAddressCount(user._id);
+      if (addressResult.success) {
+          setAddressCount(addressResult.count);
+        } else {
+          console.error('Fetch address count error:', addressResult.message);
+        }
     }
     fetchUser();
   }, [authController, navigate]);
 
   const handleLogout = async () => {
+    setLogoutLoading(true);
+    setError('');
+    
     await authController.logout();
     navigate('/account/login');
   };
 
   if (loading) {
-    return <div>Đang tải...</div>;
+    return <div className="text-center">Đang tải...</div>;
   }
 
   if (!currentUser) {
@@ -54,7 +73,7 @@ const Account = ({ onLogin, authController }) => {
           <div>
             <div className="row pb-5">
               <div className="col-2 border-end border-secondary-subtle">
-                <div className="block-account lg:border-r border-neutral-100">
+                <div className="block-account">
                   <h5 className="title-account font-semibold fs-4" style={{ color: 'var(--color-secondary)' }}>
                     Trang tài khoản
                   </h5>
@@ -115,18 +134,13 @@ const Account = ({ onLogin, authController }) => {
                 </div>
               </div>
               <div className="col-8 bg-white rounded-4 px-3 py-4 mb-6 ms-3">
-                <h1 className="text-h4 font-semibold mb-2">Thông tin tài khoản</h1>
-                <div className="form-signup name-account m992 space-y-2">
-                  <p>
-                    <strong>Họ tên:</strong> {currentUser.firstName} {currentUser.lastName}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {currentUser.email}
-                  </p>
-                  <p>
-                    <strong>Số điện thoại:</strong> {currentUser.phoneNumber || 'Chưa cung cấp'}
-                  </p>
-                </div>
+                {error}
+                <Routes>
+                  <Route path="/" element={<AccountInfo currentUser={currentUser} />} />
+                  <Route path="/orders" element={<OrderList />} />
+                  <Route path="/changepassword" element={<ChangePassword />} />
+                  <Route path="/addresses" element={<AddressList />} />
+                </Routes>
               </div>
             </div>
           </div>

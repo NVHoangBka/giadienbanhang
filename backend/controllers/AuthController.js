@@ -1,6 +1,9 @@
-const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const User = require('../models/User');
+const Order = require('../models/Order');
+const Address = require('../models/Address');
+
 
 class AuthController {
   static async register(req, res) {
