@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, Route, Routes, useNavigate } from 'react-router-dom';
-import AuthController from '../../../../controllers/AuthController';
 import OrderController from '../../../../controllers/OrderController';
 import AccountInfo from './AccountInfo';
 import OrderList from './OrderList';
@@ -29,6 +28,7 @@ const Account = ({ onLogin, authController }) => {
           setAddressCount(addressResult.count);
         } else {
           console.error('Fetch address count error:', addressResult.message);
+          setAddressCount(addressCount);
         }
     }
     fetchUser();
@@ -90,7 +90,7 @@ const Account = ({ onLogin, authController }) => {
                         className={({ isActive }) =>
                           `title-info link fw-semibold text-decoration-none fs-7 ${isActive ? 'text-active' : 'text-black text-hover'}`
                         } 
-                        to="/account">
+                        to="/account/info">
                         Thông tin tài khoản
                       </NavLink>
                     </li>
@@ -117,8 +117,8 @@ const Account = ({ onLogin, authController }) => {
                         className={({ isActive }) =>
                           `title-info link fw-semibold text-decoration-none fs-7 ${isActive ? 'text-active' : 'text-black text-hover'}`
                         } 
-                        to="/account/addresses">
-                        Sổ địa chỉ (0)
+                        to="/account/address">
+                        Sổ địa chỉ ({addressCount})
                       </NavLink>
                     </li>
                     <li className='mt-2'>
@@ -133,13 +133,13 @@ const Account = ({ onLogin, authController }) => {
                   </ul>
                 </div>
               </div>
-              <div className="col-8 bg-white rounded-4 px-3 py-4 mb-6 ms-3">
+              <div className="col-9 bg-white rounded-4 px-3 py-4 mb-6 ms-3">
                 {error}
                 <Routes>
-                  <Route path="/" element={<AccountInfo currentUser={currentUser} />} />
-                  <Route path="/orders" element={<OrderList />} />
+                  <Route path="/info" element={<AccountInfo currentUser={currentUser} />} />
+                  <Route path="/orders" element={<OrderList/>} />
                   <Route path="/changepassword" element={<ChangePassword />} />
-                  <Route path="/addresses" element={<AddressList />} />
+                  <Route path="/address" element={<AddressList />} />
                 </Routes>
               </div>
             </div>

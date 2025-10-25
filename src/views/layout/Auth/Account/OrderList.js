@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import OrderController from '../../../../controllers/OrderController';
+
 
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
@@ -33,41 +34,51 @@ const OrderList = () => {
   }
 
   return (
-    <div>
+    <div className='px-2 pt-1'>
       <h1 className="fs-3 fw-semibold mb-3">Đơn hàng của bạn</h1>
       {error && <div className="alert alert-danger">{error}</div>}
-      {orders.length === 0 ? (
-        <p className="fs-6">Bạn chưa có đơn hàng nào.</p>
-      ) : (
         <div className="table-responsive">
           <table className="table table-bordered">
             <thead>
-              <tr>
-                <th>Mã đơn hàng</th>
-                <th>Tổng tiền</th>
-                <th>Trạng thái</th>
-                <th>Ngày tạo</th>
-                <th>Chi tiết</th>
+              <tr className='text-center border-bottom'>
+                <th >Mã đơn hàng</th>
+                <th>Ngày</th>
+                <th>Địa chỉ</th>
+                <th>Giá trị đơn hàng</th>
+                <th>TT thanh toán</th>
+                <th>Xem chi tiết</th>
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
-                <tr key={order.orderId}>
-                  <td>{order.orderId}</td>
-                  <td>{order.total.toLocaleString('vi-VN')} VNĐ</td>
-                  <td>{order.status}</td>
-                  <td>{new Date(order.createdAt).toLocaleDateString('vi-VN')}</td>
-                  <td>
-                    <Link to={`/account/orders/${order.orderId}`} className="text-primary">
-                      Xem chi tiết
-                    </Link>
-                  </td>
+            {orders.length === 0 ? (        
+                <tr className="fs-7 text-center">
+                  <td colSpan={6}>Không đơn hàng nào.</td>
                 </tr>
-              ))}
+              ) : (
+                orders.map((order) => (
+                  <tr key={order.orderId} className="fs-7 text-center">
+                    <td>{order.orderId}</td>
+                    <td>{new Date(order.createdAt).toLocaleDateString('vi-VN')}</td>
+                    <td>{order.address}</td>
+                    <td>{order.total.toLocaleString('vi-VN')} VNĐ</td>
+                    <td>{{
+                          'pending': 'Đang xử lý',
+                          'shipped': 'Đã giao',
+                          'canceled': 'Đã hủy',
+                        }[order.status] || 'Không xác định'}
+                    </td>
+                    <td>
+                      <Link to={`/account/orders/${order.orderId}`} className="text-primary">
+                        Xem chi tiết
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )
+            }
             </tbody>
           </table>
         </div>
-      )}
     </div>
   );
 };

@@ -159,6 +159,34 @@ class AuthController {
       res.status(500).json({ success: false, message: 'Lỗi hệ thống' });
     }
   }
+
+  static async getOrders(req, res) {
+    try {
+      const user = req.user;
+      if (!user) {
+        return res.status(401).json({ success: false, message: 'Không có quyền truy cập', expired: true });
+      }
+      const orders = await Order.find({ userId: user._id }).populate('items.productId');
+      res.json({ success: true, orders });
+    } catch (error) {
+      console.error('Get orders error:', error.message, error.stack);
+      res.status(500).json({ success: false, message: 'Lỗi hệ thống' });
+    }
+  }
+
+  static async getAddresses(req, res) {
+    try {
+      const user = req.user;
+      if (!user) {
+        return res.status(401).json({ success: false, message: 'Không có quyền truy cập', expired: true });
+      }
+      const addresses = await Address.find({ userId: user._id });
+      res.json({ success: true, addresses });
+    } catch (error) {
+      console.error('Get addresses error:', error.message, error.stack);
+      res.status(500).json({ success: false, message: 'Lỗi hệ thống' });
+    }
+  }
 }
 
 module.exports = AuthController;

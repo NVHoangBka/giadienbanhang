@@ -13,16 +13,11 @@ const Header = ({ cartController, isAuthenticated, onLogout, cartItems, onCartCh
   const handleClickHome = () => navigate('/');
   const handleClickLogin = () => {
     if (isAuthenticated) {
-      navigate('/account')
+      navigate('/account/info')
     } else {
 
       navigate('/account/login')
     } 
-  };
-  const handleClickLogout = () => {
-    authController.logout();
-    onLogout();
-    navigate('/');
   };
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import Header from './views/components/Header';
 import CartController from './controllers/CartController';
 import Footer from './views/components/Footer';
@@ -27,7 +27,7 @@ const App = () => {
       }
     }
     checkAuth();
-  }, [cartItems]);
+  }, [cartItems, authController]);
 
   const addToCart = (product) => {
     try {
@@ -91,6 +91,7 @@ const App = () => {
           removeFromCart={removeFromCart}
           onLogin={onLogin}
           onCartChange={onCartChange}
+          authController={authController}
         />
       </div>
       <Footer />

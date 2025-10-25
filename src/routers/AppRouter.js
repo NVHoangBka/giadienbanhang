@@ -6,7 +6,7 @@ import CartRouter from './CartRouter';
 import Home from '../views/Home';
 import ProductController from '../controllers/ProductController'; // Giả định export instance
 
-const AppRouter = ({ isAuthenticated, cartItems, addToCart, removeFromCart, onLogin, onCartChange }) => {
+const AppRouter = ({ isAuthenticated, cartItems, addToCart, removeFromCart, onLogin, onCartChange, authController }) => {
   // Xác định route fallback dựa trên trạng thái đăng nhập
   const getFallbackRoute = () => {
     return isAuthenticated ? '/' : '/account/login';
@@ -21,7 +21,7 @@ const AppRouter = ({ isAuthenticated, cartItems, addToCart, removeFromCart, onLo
       {/* Auth */}
       <Route 
         path="/account/*" 
-        element={<AuthRouter isAuthenticated={isAuthenticated} onLogin={onLogin} />} 
+        element={<AuthRouter isAuthenticated={isAuthenticated} onLogin={onLogin} authController= {authController}/>} 
       />
 
       {/* Product */}

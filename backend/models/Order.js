@@ -1,18 +1,58 @@
 const mongoose = require('mongoose');
+require('./Products'); // Import product.js để đăng ký schema Product trước
 
-const orderSchema = new mongoose.Schema({
-  orderId: { type: String, required: true, unique: true },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  items: [
-    {
-      productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
-      quantity: { type: Number, required: true },
-      price: { type: Number, required: true }
-    }
-  ],
-  total: { type: Number, required: true },
-  status: { type: String, enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'], default: 'pending' },
-  createdAt: { type: Date, default: Date.now }
+const orderItemSchema = new mongoose.Schema({
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product', // Tham chiếu đến collection Products
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: 1,
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
 });
 
-module.exports = mongoose.model('Order', orderSchema);
+const orderSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  orderId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  total: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'shipped', 'canceled'],
+    default: 'pending',
+  },
+  items: [orderItemSchema],
+}, {
+  timestamps: true,
+});
+
+const Order = mongoose.model('Order', orderSchema);
+
+module.exports = Order;
